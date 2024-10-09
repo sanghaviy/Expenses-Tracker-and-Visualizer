@@ -1,0 +1,84 @@
+<div class="themebgColor h-100">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <img class="col-lg-6 d-none d-lg-block " src="../../../assets/images/brain.jpg">
+                            <div class="col-lg-6">
+                                <div class="p-4">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Brain Squeezes!!</h1>
+                                    </div>
+                                    <form [formGroup]="loginForm" class="user">
+                                        <div class="form-group">
+                                            <img class="user-icon" src="../../../assets/images/user.png">
+                                            <input type="text" formControlName="username"
+                                                class="form-control form-control-user" id="exampleInputUsername"
+                                                 placeholder="*Enter username">
+                                            <div class="color-red"
+                                                *ngIf="(formvalid) || (loginForm.controls['username'].dirty)">
+                                                <div
+                                                    *ngIf="loginForm.controls['username'].hasError('required')">
+                                                    *Required username
+                                                </div>
+                                                <!-- <div *ngIf="loginForm.controls['email'].hasError('email') email">
+                                                    *Enter a valid email id
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-group pt-2">
+                                            <img class="password-icon" src="../../../assets/images/password.png">
+                                            <input [type]="passwordType" formControlName="password"
+                                                class="form-control form-control-user" placeholder="*Password">
+                                            <span *ngIf="passwordType == 'Text'" (click)="passwordType = 'Password'"
+                                                class="fa fa-eye showPassword cursor"></span>
+                                            <span *ngIf="passwordType == 'Password'" (click)="passwordType = 'Text'"
+                                                class="fa fa-eye-slash showPassword cursor"></span>
+                                            <div class="color-red"
+                                                *ngIf="(formvalid) || (loginForm.controls['password'].dirty)">
+                                                <div
+                                                    *ngIf="loginForm.controls['password'].hasError('required')">
+                                                    *Required password
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group pt-2">
+                                            <!-- <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">&nbsp;
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                            </div> -->
+                                        </div>
+                                        <div class="form-group pt-2">
+                                            <button type="submit" class="btn btn-primary btn-user btn-block login-btn"
+                                                (click)="login()">Login</button>
+                                        </div>
+                                        <hr>
+                                        <div class="form-group pt-2 cursor">
+                                            <a routerLink="/login">
+                                                <img class="floatLeft" src="../../../assets/images/google.png">
+                                            </a>
+                                        </div>
+                                        <div class="form-group cursor" style="margin-left: 15%;">
+                                            <a (click)="fbLogin(true)">
+                                                <img src="../../../assets/images/facebook.png">
+                                            </a>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center floatLeft" style="margin: 0px 35px; font-weight: 600;">
+                                        <a class="small" href="">Forgot Password?</a>
+                                    </div>
+                                    <div class="text-center" style="font-weight: 600;">
+                                        <a class="small" routerLink="/signup">Create an Account!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
