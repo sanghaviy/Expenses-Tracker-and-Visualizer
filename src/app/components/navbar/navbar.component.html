@@ -1,1 +1,87 @@
-<p>navbar works!</p>
+<!-- Topbar Navbar -->
+<nav class="navbar navbar-expand navbar-light textBg  topbar mb-4 static-top shadow">
+    <div class="sidebar-brand-icon-a" (click)="toggleMenu()">
+        <i class="fa-solid fa-bars fa-xl mx-3" style="color: #ffffff;"></i>
+    </div>
+    <div class="container-fluid justify-content-between">
+        
+        <div class="d-flex">
+            <img style="width:36%;" src="../../../assets/images/logo.png" alt="Expense Tracker System">
+            <form class="input-group w-auto my-auto d-none d-sm-flex mx-5">
+                <input autocomplete="off" type="search" class="form-control" placeholder="Search"
+                    style="min-width: 125px;" />
+                <span class="input-group-text border-0 d-none d-lg-flex cursor themebgColor text-white"><i class="fa fa-search"></i></span>
+            </form>
+        </div>          
+          
+        <!-- Center elements -->
+        <ul class="navbar-nav flex-row d-none d-md-flex">
+            <li class="notification-container">
+                <a class="nav-link dropdown-toggle hidden-arrow" id="navbarDropdownMenuLink" role="button" 
+                aria-expanded="false">
+                    <i class="fa fa-bell fa-lg"></i>
+                    <span class="badge rounded-pill badge-notification bg-danger">12</span>
+                </a>
+                <ul class="notification-dropdown dropdown-menu dropdown-menu-end" >
+                    <li>
+                        <a class="dropdown-item" href="">notification a</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="">notification b</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="">notification c</a>
+                    </li>
+                </ul>
+            </li> 
+            <li class="chatbox-container px-2">
+                <a class="nav-link dropdown-toggle hidden-arrow" href="" id="navbarDropdownMenuLink" role="button"
+                     aria-expanded="false">
+                    <i class="fa fa-comments fa-lg"></i>
+                    <span class="badge rounded-pill badge-notification bg-danger">6</span>
+                </a>
+                <ul class="chatbox-dropdown dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="">message 1</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="">message 2</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="">message 3</a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+        <!-- Center elements -->
+
+        <!-- Right elements -->
+        <ul class="navbar-nav flex-row">
+            <li c class="profile-container">
+                <a class="nav-link d-sm-flex align-items-sm-center">
+                    <strong class="d-none d-sm-block ms-1 text-white">{{userName}}</strong>
+                    <img src="../../../assets/images/profile_picture.png" class="rounded-circle" height="35" alt="" />
+                </a>
+                <ul class="profile-dropdown dropdown-menu dropdown-menu-end">
+                    <li>
+                        <!-- <img src="../../../assets/images/profile_picture.png" style="float: left;" height="25" alt="" /> -->
+                        <a class="dropdown-item" routerLink="/profile-options/profile">Profile</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="/profile-options/settings">Settings</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="/profile-options/activity">Activity</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" (click)="logout()">Logout</a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+        <!-- Right elements -->
+    </div>
+</nav>
+<!-- Navbar -->

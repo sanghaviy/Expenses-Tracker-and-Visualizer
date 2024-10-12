@@ -1,1 +1,13 @@
-<p>sidebar works!</p>
+<div *ngIf="!toggleChanged" style="background: #ff810c; height: 40vh;">
+    <li class="nav-item cursor mx-3" routerLink="/dashboard">
+        <a class="nav-link"><span class="fs-5">HOME</span></a>
+    </li>
+    <hr class="bold-hr text-white">
+    <li class="nav-item cursor mx-3" routerLink="/categories">
+        <a class="nav-link"><span class="fs-5">VIEW EXPENSES</span></a>
+    </li>
+    <hr class="bold-hr text-white">
+    <li class="nav-item cursor mx-3" routerLink="/questions">
+        <a class="nav-link"><span class="fs-5">LOGOUT</span></a>
+    </li>
+</div>

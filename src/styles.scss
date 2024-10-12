@@ -1,1 +1,446 @@
-/* You can add global styles to this file, and also import other style files */
+.cursor {
+  cursor: pointer !important;
+}
+
+.overflowAuto {
+  overflow: auto;
+}
+
+.themeColor {
+  color: #FFC590;
+}
+
+.themebgColor {
+  background: #FFC590 !important;
+}
+
+.floatLeft {
+  float: left;
+}
+
+.floatright {
+  float: right;
+}
+
+// login and register page styles -- start
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #fff;
+}
+
+p {
+  color: #b3b3b3;
+  font-weight: 300;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: "Roboto", sans-serif;
+}
+
+a {
+  -webkit-transition: 0.3s all ease;
+  -o-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+}
+a:hover {
+  text-decoration: none !important;
+}
+
+.content {
+  padding: 7rem 0;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+.half,
+.half .container > .row {
+  height: 100vh;
+  min-height: 700px;
+}
+
+@media (max-width: 991.98px) {
+  .half .bg {
+    height: 200px;
+  }
+}
+
+.half .contents {
+  background: #f6f7fc;
+}
+
+.half .contents,
+.half .bg {
+  width: 50%;
+}
+@media (max-width: 1199.98px) {
+  .half .contents,
+  .half .bg {
+    width: 100%;
+  }
+}
+.half .contents .form-control,
+.half .bg .form-control {
+  border: none;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  height: 54px;
+  background: #fff;
+}
+.half .contents .form-control:active,
+.half .contents .form-control:focus,
+.half .bg .form-control:active,
+.half .bg .form-control:focus {
+  outline: none;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.half .bg {
+  background-size: cover;
+  background-position: center;
+}
+
+.half a {
+  color: #888;
+  text-decoration: underline;
+}
+
+.half .btn {
+  height: 54px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.half .forgot-pass {
+  position: relative;
+  top: 2px;
+  font-size: 14px;
+}
+
+.control {
+  display: block;
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.control .caption {
+  position: relative;
+  top: 0.2rem;
+  color: #888;
+}
+
+.control input {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.control__indicator {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: #e6e6e6;
+  border-radius: 4px;
+}
+
+.control--radio .control__indicator {
+  border-radius: 50%;
+}
+
+.control:hover input ~ .control__indicator,
+.control input:focus ~ .control__indicator {
+  background: #ccc;
+}
+
+.control input:checked ~ .control__indicator {
+  background: #fb771a;
+}
+
+.control:hover input:not([disabled]):checked ~ .control__indicator,
+.control input:checked:focus ~ .control__indicator {
+  background: #fb8633;
+}
+
+.control input:disabled ~ .control__indicator {
+  background: #e6e6e6;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.control__indicator:after {
+  font-family: "icomoon";
+  content: "\e5ca";
+  position: absolute;
+  display: none;
+  font-size: 16px;
+  -webkit-transition: 0.3s all ease;
+  -o-transition: 0.3s all ease;
+  transition: 0.3s all ease;
+}
+
+.control input:checked ~ .control__indicator:after {
+  display: block;
+  color: #fff;
+}
+
+.control--checkbox .control__indicator:after {
+  top: 50%;
+  left: 50%;
+  margin-top: -1px;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.control--checkbox input:disabled ~ .control__indicator:after {
+  border-color: #7b7b7b;
+}
+
+.control--checkbox input:disabled:checked ~ .control__indicator {
+  background-color: #7e0cf5;
+  opacity: 0.2;
+}
+
+// login and register page styles -- end
+
+/* BASE TEMPLATE CSS */
+#wrapper {
+  display: flex;
+}
+
+#wrapper #content-wrapper {
+  background-color: #f8f9fc;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#wrapper #content-wrapper #content {
+  flex: 1 0 auto;
+}
+
+/** SIDEBAR */
+
+.sidebar #sidebarToggle {
+  //
+  width: 2.5rem;
+  height: 2.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.sidebar #sidebarToggle::after {
+  //
+  font-weight: 900;
+  content: "< >";
+  font-family: "Font Awesome 5 Pro";
+  margin-right: 0.1rem;
+}
+
+.sidebar .sidebar-brand {
+  //
+  height: 4.375rem;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  z-index: 1;
+}
+
+.sidebar .sidebar-brand .sidebar-brand-icon-a img {
+  //
+  width: 35px;
+  left: 10px;
+  position: absolute;
+  top: 20px;
+}
+
+.sidebar .sidebar-brand .sidebar-brand-icon-a span {
+  //
+  top: 25px;
+  left: 50px;
+  position: absolute;
+  font-size: 17px;
+}
+
+.sidebar .sidebar-brand .sidebar-brand-icon-b img {
+  //
+  font-size: 2rem;
+  width: 50px;
+}
+
+.sidebar .sidebar-brand-icon-b {
+  //
+  display: none;
+}
+
+.sidebar.toggled .sidebar-brand-icon-a {
+  //
+  display: none;
+}
+
+.sidebar.toggled .sidebar-brand-icon-b {
+  //
+  display: block;
+}
+
+.sidebar hr.sidebar-divider {
+  //
+  margin: 2px 1rem 1rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar .sidebar-brand-icon-a {
+    display: none;
+  }
+
+  .sidebar .sidebar-brand-icon-b {
+    display: inline;
+  }
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    width: 14rem !important;
+  }
+
+  .sidebar .nav-item .collapse {
+    position: relative;
+    left: 0;
+    z-index: 1;
+    top: 0;
+    -webkit-animation: none;
+    animation: none;
+  }
+
+  .sidebar .nav-item .collapse .collapse-inner {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .sidebar .nav-item .collapsing {
+    display: block;
+    transition: height 0.15s ease;
+  }
+
+  .sidebar .nav-item .collapse,
+  .sidebar .nav-item .collapsing {
+    margin: 0 1rem;
+  }
+
+  .sidebar .nav-item .nav-link {
+    //
+    display: block;
+    width: 100%;
+    text-align: left;
+    width: 14rem;
+  }
+  .sidebar .nav-item .nav-link span {
+    //
+    font-size: 1.4rem;
+    display: inline;
+  }
+
+  .sidebar .nav-item img {
+    //
+    width: 35px;
+    float: left;
+    margin: 7px 8px 7px 16px;
+  }
+
+  .sidebar.toggled {
+    //
+    overflow: visible;
+    width: 4.5rem !important;
+  }
+}
+
+.sidebar-bright .sidebar-brand {
+  //
+  color: #fff;
+}
+
+.sidebar-bright hr.sidebar-divider {
+  //
+  border-top: 2px solid rgba(255, 255, 255);
+}
+
+.sidebar-bright .nav-item .nav-link {
+  //
+  color: #fff;
+}
+
+.sidebar-bright #sidebarToggle {
+  background-color: white;
+}
+
+/* SIDEBAR */
+
+.color-red {
+  color: red !important;
+}
+
+.ulmenu {
+  height: 100% !important;
+  overflow-y: scroll;
+}
+
+ul.dropdown-menu a:hover {
+  color: #fff;
+  border-color: #fff;
+  background: #10ddb8 !important;
+}
+
+.dotted-line {
+  border: none;
+  border-top: 3px dashed;
+}
+
+.accordian {
+  border: 10px solid #d9d9d9 !important;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.text {
+  color: #ff810c;
+}
+
+.textBg {
+  background: #ff810c;
+}
+
+#accordionSidebar.toggled {
+    margin-left: -250px; 
+    transition: margin 0.3s ease;
+  }
+  
+.navbar {
+    margin-bottom: 0px !important;
+}
+
+.bold-hr {
+    border-top: 4px solid white;
+    height: 3px;
+}

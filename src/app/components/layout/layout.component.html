@@ -1,11 +1,14 @@
 <div id="wrapper">
-    <div id="content-wrapper" class="d-flex flex-column main_layout">
+    <div id="content-wrapper" class="d-flex flex-column main_layout bg-white">
         <div id="content" class="main_content">
-            <app-navbar></app-navbar>
-            dd
+            <app-navbar *ngIf="userLoggedIn || onMenuShow" (menuToggled)="onMenuToggled($event)"
+                (logoutUser)="onLogout($event)">
+            </app-navbar>
+            <ul *ngIf="userLoggedIn || onMenuShow" class="navbar-nav sidebar sidebar-bright themebgColor"
+                id="accordionSidebar" style="float: left; height: 92.2%;">
+                <app-sidebar [toggleChanged]="isMenuToggled"></app-sidebar>
+            </ul>
             <router-outlet></router-outlet>
-            vv
-            <app-footer></app-footer>
         </div>
     </div>
 </div>
