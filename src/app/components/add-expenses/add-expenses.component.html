@@ -2,33 +2,65 @@
     <div class="expense-form" style="border: 2px solid #d2caca;">
         <h2>Enter Expense</h2>
         <p>* Please enter the required fields to save new expense!</p>
-
-        <input type="text" id="expense-name" [(ngModel)]="expense.name" placeholder="* Expense Name" required>
-        <input type="number" id="total-amount" [(ngModel)]="expense.totalAmount" placeholder="* Total Amount" required>
-        <input type="number" id="tax-amount" [(ngModel)]="expense.taxAmount" placeholder="* Tax Amount" required>
-
-        <select id="expense-category" [(ngModel)]="expense.category" required>
-            <option value="" disabled selected>* Expense Category</option>
-            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-            <option value="unassigned">Unassigned</option>
-        </select>
-
-        <div class="form-group">
-            <label for="expense-date" class="placeholder-label">* Expense Date</label>
-            <input type="date" id="expense-date" [(ngModel)]="expense.date" class="form-control" required>
-        </div>
-
-        <input type="text" id="payment-type" [(ngModel)]="expense.paymentType" placeholder="* Payment Type" required>
-
-        <br>
-        <textarea id="comments" class="mt-2" [(ngModel)]="expense.comments" placeholder="Comments" rows="1"></textarea>
-
-        <button class="btn" (click)="onSubmit()">Submit Expense</button>
+        <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()">
+    
+            <!-- Name Field -->
+            <input type="text" id="expense-name" formControlName="name" class="form-control" placeholder="* Expense Name" required>
+            <div *ngIf="expenseForm.get('name')?.touched && expenseForm.get('name')?.invalid" class="text-danger">
+                <small *ngIf="expenseForm.get('name')?.errors?.['required']">Name is required.</small>
+            </div>
+        
+            <!-- Total Amount Field -->
+            <input type="number" id="total-amount" formControlName="totalAmount" class="form-control" placeholder="* Total Amount" required>
+            <div *ngIf="expenseForm.get('totalAmount')?.touched && expenseForm.get('totalAmount')?.invalid" class="text-danger">
+                <small *ngIf="expenseForm.get('totalAmount')?.errors?.['required']">Total amount is required.</small>
+                <small *ngIf="expenseForm.get('totalAmount')?.errors?.['min']">Total amount must be at least 1.</small>
+            </div>
+        
+            <!-- Tax Amount Field -->
+            <input type="number" id="tax-amount" formControlName="taxAmount" class="form-control" placeholder="* Tax Amount" required>
+            <div *ngIf="expenseForm.get('taxAmount')?.touched && expenseForm.get('taxAmount')?.invalid" class="text-danger">
+                <small *ngIf="expenseForm.get('taxAmount')?.errors?.['required']">Tax amount is required.</small>
+                <small *ngIf="expenseForm.get('taxAmount')?.errors?.['min']">Tax amount must be non-negative.</small>
+            </div>
+        
+            <!-- Category Field -->
+            <select id="expense-category" formControlName="category" class="form-control" required style="height: auto;">
+                <option value="" disabled selected>* Expense Category</option>
+                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+                <option value="unassigned">Unassigned</option>
+            </select>
+            <div *ngIf="expenseForm.get('category')?.touched && expenseForm.get('category')?.invalid" class="text-danger">
+                <small *ngIf="expenseForm.get('category')?.errors?.['required']">Category is required.</small>
+            </div>
+        
+            <!-- Date Field -->
+            <div class="form-group">
+                <label for="expense-date" class="placeholder-label">* Expense Date</label>
+                <input type="date" id="expense-date" formControlName="date" class="form-control" required>
+                <div *ngIf="expenseForm.get('date')?.touched && expenseForm.get('date')?.invalid" class="text-danger">
+                    <small *ngIf="expenseForm.get('date')?.errors?.['required']">Date is required.</small>
+                </div>
+            </div>
+        
+            <!-- Payment Type Field -->
+            <input type="text" id="payment-type" formControlName="paymentType" class="form-control" placeholder="* Payment Type" required>
+            <div *ngIf="expenseForm.get('paymentType')?.touched && expenseForm.get('paymentType')?.invalid" class="text-danger">
+                <small *ngIf="expenseForm.get('paymentType')?.errors?.['required']">Payment type is required.</small>
+            </div>
+        
+            <!-- Comments Field (Optional) -->
+            <textarea id="comments" class="mt-2 form-control" formControlName="comments" placeholder="Comments" rows="1"></textarea>
+        
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" [disabled]="expenseForm.invalid">Submit Expense</button>
+        </form>
+        
     </div>
 
     <div class="add-category" style="border: 2px solid #d2caca;">
         <h2>Add Category</h2>
-        <p>Add/Remove Expenses Categories Below</p>
+        <p>Add/Remove Expenses Categories Below:</p>
 
         <div class="category-list">
             <span *ngFor="let category of categories" class="category-item">
