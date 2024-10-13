@@ -1,1 +1,57 @@
-<p>add-expenses works!</p>
+<div class="container mt-3">
+    <div class="expense-form" style="border: 2px solid #d2caca;">
+        <h2>Enter Expense</h2>
+        <p>* Please enter the required fields to save new expense!</p>
+        
+        <input type="text" id="expense-name" placeholder="* Expense Name" required>
+        <input type="number" id="total-amount" placeholder="* Total Amount" required>
+        <input type="number" id="tax-amount" placeholder="* Tax Amount" required>
+        
+        <select id="expense-category" required>
+            <option value="" disabled selected>* Expense Category</option>
+            <option value="groceries">Groceries</option>
+            <option value="insurance">Insurance</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="dining-out">Dining out</option>
+            <option value="unassigned">Unassigned</option>
+        </select>
+        <div class="form-group">
+            <label for="expense-date" class="placeholder-label">* Expense Date</label>
+            <input type="date" id="expense-date" class="form-control" required>
+        </div>
+                        
+        <input type="text" id="payment-type" placeholder="* Payment Type" required>
+        
+        <br>
+        <br>
+        <textarea id="comments" placeholder="Comments" rows="1"></textarea>
+
+        <button class="btn">Submit Expense</button>
+    </div>
+
+    <div class="add-category" style="border: 2px solid #d2caca;">
+        <h2>Add Category</h2>
+        <p>Add/Remove Expenses Categories Below</p>
+
+        <div class="category-list">
+            <span>Groceries</span>
+            <span>Insurance</span>
+            <span>Entertainment</span>
+            <span>Dining out</span>
+            <span>Unassigned</span>
+        </div>
+
+        <label for="monthly-budget">Set Monthly Budget</label>
+        <input type="number" id="monthly-budget" placeholder="Enter Budget" required>
+        
+        <div class="button-container">
+            <button class="btn btn-grey">Reset</button>
+            <button class="btn btn-orange">Save</button>
+        </div>
+
+        <div class="button-container">
+            <button class="btn btn-orange">Import Expenses</button>
+            <button class="btn btn-orange">View Expenses</button>
+        </div>
+    </div>
+</div>

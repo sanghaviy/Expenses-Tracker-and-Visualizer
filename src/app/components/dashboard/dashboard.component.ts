@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,10 +7,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+  userDetails: any;
 
-  constructor() { }
+  constructor(private router: Router) {
+   }
 
   ngOnInit(): void {
+    const storedUserDetails = localStorage.getItem('loggedInUser');
+
+    if (storedUserDetails) {
+      this.userDetails = JSON.parse(storedUserDetails);
+    }
   }
 
+  AddExpenses() {
+    this.router.navigate(['/addexpense']);
+  }
 }

@@ -1,1 +1,10 @@
-<p>dashboard works!</p>
+<br>
+<h2 class="text-left font-weight-bold text headertxt">Welcome {{userDetails?.firstName}} !!</h2>
+<div class="container-class-1">
+    <img class="class-2" src="../../../assets/images/TasksList.png" alt="Tasks">
+    <div class="class-3 d-flex flex-column">
+        <h1>No Expenses Data</h1>
+        <p>Please enter an expense !!</p>
+        <input type="submit" value="+ Add Expense" class="btn btn-block btn-primary textBg border-0" (click)="AddExpenses()">
+    </div>
+</div>
