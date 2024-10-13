@@ -2,31 +2,28 @@
     <div class="expense-form" style="border: 2px solid #d2caca;">
         <h2>Enter Expense</h2>
         <p>* Please enter the required fields to save new expense!</p>
-        
-        <input type="text" id="expense-name" placeholder="* Expense Name" required>
-        <input type="number" id="total-amount" placeholder="* Total Amount" required>
-        <input type="number" id="tax-amount" placeholder="* Tax Amount" required>
-        
-        <select id="expense-category" required>
+
+        <input type="text" id="expense-name" [(ngModel)]="expense.name" placeholder="* Expense Name" required>
+        <input type="number" id="total-amount" [(ngModel)]="expense.totalAmount" placeholder="* Total Amount" required>
+        <input type="number" id="tax-amount" [(ngModel)]="expense.taxAmount" placeholder="* Tax Amount" required>
+
+        <select id="expense-category" [(ngModel)]="expense.category" required>
             <option value="" disabled selected>* Expense Category</option>
-            <option value="groceries">Groceries</option>
-            <option value="insurance">Insurance</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="dining-out">Dining out</option>
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
             <option value="unassigned">Unassigned</option>
         </select>
+
         <div class="form-group">
             <label for="expense-date" class="placeholder-label">* Expense Date</label>
-            <input type="date" id="expense-date" class="form-control" required>
+            <input type="date" id="expense-date" [(ngModel)]="expense.date" class="form-control" required>
         </div>
-                        
-        <input type="text" id="payment-type" placeholder="* Payment Type" required>
-        
-        <br>
-        <br>
-        <textarea id="comments" placeholder="Comments" rows="1"></textarea>
 
-        <button class="btn">Submit Expense</button>
+        <input type="text" id="payment-type" [(ngModel)]="expense.paymentType" placeholder="* Payment Type" required>
+
+        <br>
+        <textarea id="comments" class="mt-2" [(ngModel)]="expense.comments" placeholder="Comments" rows="1"></textarea>
+
+        <button class="btn" (click)="onSubmit()">Submit Expense</button>
     </div>
 
     <div class="add-category" style="border: 2px solid #d2caca;">
@@ -34,20 +31,47 @@
         <p>Add/Remove Expenses Categories Below</p>
 
         <div class="category-list">
-            <span>Groceries</span>
-            <span>Insurance</span>
-            <span>Entertainment</span>
-            <span>Dining out</span>
-            <span>Unassigned</span>
+            <span *ngFor="let category of categories" class="category-item">
+                {{ category }}
+                <button class="btn-remove" (click)="removeCategory(category)">X</button>
+            </span>
         </div>
 
-        <label for="monthly-budget">Set Monthly Budget</label>
-        <input type="number" id="monthly-budget" placeholder="Enter Budget" required>
-        
+        <input type="text" placeholder="New Category" [(ngModel)]="newCategory">
+        <button class="add-custom-category" (click)="addCategory()">Add Category</button>
+
         <div class="button-container">
-            <button class="btn btn-grey">Reset</button>
-            <button class="btn btn-orange">Save</button>
+            <div class="button-right">
+                <button class="btn btn-grey" (click)="resetExpenseForm()">Reset</button>
+                <button class="btn btn-orange" (click)="saveCategories()">Save</button>
+            </div>
         </div>
+        
+        <br>
+        <!-- Monthly Budget Input and Currency Dropdown -->
+        <h2>Set Monthly Budget</h2>
+        <div class="budget-input-group" style="display: flex; align-items: center;">
+            <input type="number" id="monthly-budget" [(ngModel)]="monthlyBudgetValue" placeholder="Enter Budget" required 
+                   style="flex: 1; padding: 0.5em; border: 1px solid #ccc;">
+            
+            <!-- Styled Dropdown for currency selection -->
+            <select id="currency-select" [(ngModel)]="selectedCurrencyValue" 
+                    class="btn-currency" style="margin-left: 10px;">
+                <option *ngFor="let currency of currencies" [ngValue]="currency">
+                    {{ currency.symbol }} - {{ currency.name }}
+                </option>
+            </select>
+
+            <!-- Save/Update button -->
+            <button class="btn btn-orange" (click)="saveBudget()" style="margin: 0px 0px 15px 10px">
+                Save Budget
+            </button>
+        </div>
+        
+        <!-- Display Current Budget with Currency -->
+        <p class="current-budget font-weight-bold" style="font-size: 20px;">
+            Current Budget: {{ selectedCurrency.symbol }} {{ (monthlyBudget || 0).toFixed(2) }}
+        </p>
 
         <div class="button-container">
             <button class="btn btn-orange">Import Expenses</button>
