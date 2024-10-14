@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { AngularFireDatabase } from '@angular/fire/compat/database'; // Import AngularFireDatabase
+interface Expense {
+  name: string;
+  totalAmount: number;
+  taxAmount: number;
+  category: string;
+  date: string;
+  paymentType: string;
+  comments: string;
+}
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -12,12 +21,11 @@ export class DashboardComponent implements OnInit {
   expenses: any[] = [];    // Store expenses
   showNoExpenses: boolean = false; // Track whether to show the "No Expenses" message
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private db: AngularFireDatabase) {} // Inject AngularFireDatabase
 
   ngOnInit(): void {
     this.loadLoggedInUser(); // Load user details
     this.loadExpenses();      // Load expenses
-    this.showNoExpenses = this.expenses.length === 0; // Set flag based on expenses
   }
 
   // Load logged-in user from localStorage
@@ -26,30 +34,34 @@ export class DashboardComponent implements OnInit {
     if (loggedInUser) {
       try {
         this.userDetails = JSON.parse(loggedInUser);
-        this.username = this.userDetails .username; // Get the username
+        this.username = this.userDetails.username; // Get the username
       } catch (error) {
         console.error('Failed to parse logged-in user data', error);
       }
     }
   }
 
-  // Load expenses from localStorage based on the username
+  // Load expenses from Firebase based on the username
   loadExpenses() {
     if (this.username) {
-      const expensesKey = `expenses_${this.username}`; // Create a unique key for expenses
-      const savedExpenses = localStorage.getItem(expensesKey);
-      if (savedExpenses) {
-        try {
-          this.expenses = JSON.parse(savedExpenses) || []; // Parse and assign expenses
-        } catch (error) {
-          console.error('Failed to load expenses data from localStorage', error);
-        }
-      } else {
-        this.expenses = []; // No expenses found
-      }
+      const sanitizedEmail = this.sanitizeEmail(this.username); // Sanitize email for Firebase path
+      const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`).valueChanges();
+
+      userExpensesRef.subscribe(expenses => {
+        this.expenses = expenses; // Assign fetched expenses
+        this.showNoExpenses = this.expenses.length === 0; // Update flag based on expenses
+      }, error => {
+        console.error('Error loading expenses from Firebase:', error); // Handle error
+      });
     } else {
       this.expenses = []; // No username, no expenses
+      this.showNoExpenses = true; // Show "No Expenses" message
     }
+  }
+
+  // Sanitize email to use in Firebase path
+  private sanitizeEmail(email: string): string {
+    return email.replace(/\./g, '_'); // Replace dots with underscores
   }
 
   // This method is triggered when the ViewExpenses component emits an event

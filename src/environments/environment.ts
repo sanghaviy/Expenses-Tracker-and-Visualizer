@@ -3,8 +3,18 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: "//",
+    authDomain: "expenses-tracker-system.firebaseapp.com",
+    databaseURL: "https://expenses-tracker-system-default-rtdb.firebaseio.com",
+    projectId: "expenses-tracker-system",
+    storageBucket: "expenses-tracker-system.appspot.com",
+    messagingSenderId: "873108457705",
+    appId: "//sanghavi prod database"
+  }
 };
+
 
 /*
  * For easier debugging in development mode, you can import the following file

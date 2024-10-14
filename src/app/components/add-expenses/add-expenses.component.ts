@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -17,6 +18,11 @@ interface Currency {
   name: string;
 }
 
+interface BudgetData {
+  monthlyBudget: number;
+  selectedCurrency: Currency;
+}
+
 @Component({
   selector: 'app-add-expenses',
   templateUrl: './add-expenses.component.html',
@@ -30,7 +36,6 @@ export class AddExpensesComponent implements OnInit {
     'Entertainment',
     'Dining out',
   ];
-  temporaryCategories: string[] = [];
   newCategory: string = '';
   loggedInUser: any;
   expenses: Expense[] = [];
@@ -41,20 +46,23 @@ export class AddExpensesComponent implements OnInit {
     { symbol: '₹', name: 'INR' },
   ];
   selectedCurrency: Currency;
-  selectedCurrencyValue: Currency = { symbol: '$', name: 'USD' };
   monthlyBudgetValue: number = 0;
   monthlyBudget: number = 0;
   spendingPercentage: number = 0;
   totalSpent: number = 0;
+  selectedCurrencyValue: Currency = { symbol: '$', name: 'USD' };
 
-  constructor(private toastr: ToastrService, private fb: FormBuilder) {
-    debugger;
+  constructor(
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private db: AngularFireDatabase // Inject AngularFireDatabase
+  ) {
     this.selectedCurrency = this.currencies[0];
   }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadBudgetAndCurrency();
+    this.loadBudgetAndCurrency(); // Load budget from Firebase
     this.loadCategories();
     this.loadExpenses();
     this.calculateSpendingPercentage();
@@ -76,22 +84,34 @@ export class AddExpensesComponent implements OnInit {
     this.loggedInUser = JSON.parse(
       localStorage.getItem('loggedInUser') || '{}'
     );
-    const storedCategories = localStorage.getItem(
-      `categories_${this.loggedInUser.username}`
-    );
-    if (storedCategories) {
-      try {
-        this.categories = JSON.parse(storedCategories);
-      } catch (error) {
-        this.toastr.error('Failed to load categories.', 'Error');
-      }
+  
+    if (!this.loggedInUser.username) {
+      this.toastr.error('User not found in local storage.', 'Error');
+      return;
     }
+  
+    const sanitizedEmail = this.sanitizeEmail(this.loggedInUser.username);
+    const userCategoriesRef = this.db.object<{ categories: string[] }>(`categories/${sanitizedEmail}`);
+  
+    userCategoriesRef.valueChanges().subscribe(categoriesData => {
+      if (categoriesData && categoriesData.categories) {
+        this.categories = categoriesData.categories;
+        // this.toastr.success('Categories loaded successfully from Firebase!', 'Success');
+      } else {
+        // this.toastr.warning('No categories found for the user in Firebase.', 'Warning');
+        this.categories = []; // Reset categories if none are found
+      }
+    }, error => {
+      this.toastr.error('Failed to load categories from Firebase.', 'Error');
+      console.error('Firebase loading error:', error);
+    });
   }
+  
 
   addCategory() {
     const trimmedCategory = this.newCategory.trim();
     if (trimmedCategory && !this.categories.includes(trimmedCategory)) {
-      this.temporaryCategories.push(trimmedCategory);
+      // Update only local object
       this.categories.push(trimmedCategory);
       this.newCategory = '';
     } else {
@@ -106,19 +126,30 @@ export class AddExpensesComponent implements OnInit {
     const index = this.categories.indexOf(category);
     if (index > -1) {
       this.categories.splice(index, 1);
+      this.saveCategories(); // Save categories after removing one
     }
   }
 
   saveCategories() {
-    const uniqueCategories = Array.from(
-      new Set([...this.categories, ...this.temporaryCategories])
+    const uniqueCategories = Array.from(new Set(this.categories)); // Ensure unique categories
+    // localStorage.setItem(
+    //   `categories_${this.loggedInUser.username}`,
+    //   JSON.stringify(uniqueCategories)
+    // );
+    // this.toastr.success('Categories updated in local storage!', 'Success');
+    
+    // Now save to Firebase
+    this.saveCategoriesToFirebase(uniqueCategories);
+  }
+
+  private saveCategoriesToFirebase(categories: string[]) {
+    this.loggedInUser = JSON.parse(
+      localStorage.getItem('loggedInUser') || '{}'
     );
-    localStorage.setItem(
-      `categories_${this.loggedInUser.username}`,
-      JSON.stringify(uniqueCategories)
-    );
-    this.toastr.success('Categories saved successfully!', 'Success');
-    this.temporaryCategories = [];
+    const sanitizedEmail = this.sanitizeEmail(this.loggedInUser.username);
+    const userCategoriesRef = this.db.object(`categories/${sanitizedEmail}`);
+    userCategoriesRef.set({ categories }); // Save the updated categories to Firebase
+    this.toastr.success('Categories saved to Firebase successfully!', 'Success');
   }
 
   submitExpense() {
@@ -131,8 +162,8 @@ export class AddExpensesComponent implements OnInit {
         return;
       }
 
-      const expense: Expense = this.expenseForm.value;
-      this.saveExpenseToLocalStorage(expense);
+      const expense: Expense = { ...this.expenseForm.value };
+      this.saveExpenseToFirebase(expense);
       this.toastr.success('Expense saved successfully!', 'Success');
       this.resetExpenseForm();
       this.calculateSpendingPercentage();
@@ -144,39 +175,50 @@ export class AddExpensesComponent implements OnInit {
     }
   }
 
-  saveExpenseToLocalStorage(expense: Expense) {
+  private sanitizeEmail(email: string): string {
+    return email.replace(/\./g, '_'); // Replace dots with underscores
+  }
+
+  saveExpenseToFirebase(expense: Expense) {
     this.loggedInUser = JSON.parse(
       localStorage.getItem('loggedInUser') || '{}'
     );
-    const userExpensesKey = `expenses_${this.loggedInUser.username}`;
-    const existingExpenses = JSON.parse(
-      localStorage.getItem(userExpensesKey) || '[]'
-    );
-    existingExpenses.push(expense);
-    localStorage.setItem(userExpensesKey, JSON.stringify(existingExpenses));
-    this.loadExpenses();
+    const sanitizedEmail = this.sanitizeEmail(this.loggedInUser.username);
+    const userExpensesRef = this.db.list(`expenses/${sanitizedEmail}`);
+    userExpensesRef.push(expense); // Save the expense to Firebase
   }
 
   loadExpenses() {
     this.loggedInUser = JSON.parse(
       localStorage.getItem('loggedInUser') || '{}'
     );
-    const userExpensesKey = `expenses_${this.loggedInUser.username}`;
-    this.expenses = JSON.parse(localStorage.getItem(userExpensesKey) || '[]');
-    this.calculateSpendingPercentage();
+    const sanitizedEmail = this.sanitizeEmail(this.loggedInUser.username);
+    const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`).valueChanges();
+
+    userExpensesRef.subscribe(expenses => {
+      this.expenses = expenses;
+      this.calculateSpendingPercentage();
+    });
   }
 
   resetExpenseForm() {
     this.expenseForm.reset();
+    this.expenseForm.controls['paymentType'].setValue('')
+    this.expenseForm.controls['category'].setValue('')
     this.newCategory = '';
-    this.categories = ['Groceries', 'Insurance', 'Entertainment', 'Dining out']; // Reset to default categories
+    this.categories = [
+      'Groceries',
+      'Insurance',
+      'Entertainment',
+      'Dining out',
+    ];
   }
 
   saveBudget() {
     this.monthlyBudget = this.monthlyBudgetValue; // Assign the value from the input
     this.selectedCurrency = this.selectedCurrencyValue;
 
-    const budgetData = {
+    const budgetData: BudgetData = {
       monthlyBudget: this.monthlyBudget,
       selectedCurrency: this.selectedCurrency,
     };
@@ -184,17 +226,22 @@ export class AddExpensesComponent implements OnInit {
     this.monthlyBudgetValue = this.monthlyBudget;
     this.calculateSpendingPercentage();
 
-    localStorage.setItem('budgetData', JSON.stringify(budgetData));
+    // Save budget data to Firebase
+    this.saveBudgetToFirebase(budgetData);
     this.toastr.success('Budget and Currency saved successfully!', 'Success');
   }
 
   loadBudgetAndCurrency() {
-    const savedBudgetData = localStorage.getItem('budgetData');
-    if (savedBudgetData) {
-      try {
-        const { monthlyBudget, selectedCurrency } = JSON.parse(savedBudgetData);
-        this.monthlyBudget = monthlyBudget || 0;
-        this.selectedCurrency = selectedCurrency || {
+    this.loggedInUser = JSON.parse(
+      localStorage.getItem('loggedInUser') || '{}'
+    );
+    const sanitizedEmail = this.sanitizeEmail(this.loggedInUser.username);
+    const userBudgetRef = this.db.object<BudgetData>(`budgets/${sanitizedEmail}`);
+
+    userBudgetRef.valueChanges().subscribe(budgetData => {
+      if (budgetData) {
+        this.monthlyBudget = budgetData.monthlyBudget || 0;
+        this.selectedCurrency = budgetData.selectedCurrency || {
           symbol: '$',
           name: 'USD',
         };
@@ -206,10 +253,20 @@ export class AddExpensesComponent implements OnInit {
             currency.symbol === this.selectedCurrency.symbol &&
             currency.name === this.selectedCurrency.name
         ) || { symbol: '$', name: 'USD' }; // Default fallback
-      } catch (error) {
-        this.toastr.error('Failed to load budget data.', 'Error');
+      } else {
+        this.monthlyBudget = 0; // Set default value if no budget data is found
+        this.selectedCurrency = { symbol: '$', name: 'USD' }; // Set default currency
       }
-    }
+    });
+  }
+
+  saveBudgetToFirebase(budgetData: BudgetData) {
+    this.loggedInUser = JSON.parse(
+      localStorage.getItem('loggedInUser') || '{}'
+    );
+    const sanitizedEmail = this.sanitizeEmail(this.loggedInUser.username);
+    const userBudgetRef = this.db.object(`budgets/${sanitizedEmail}`);
+    userBudgetRef.set(budgetData); // Save the budget to Firebase
   }
 
   calculateSpendingPercentage() {

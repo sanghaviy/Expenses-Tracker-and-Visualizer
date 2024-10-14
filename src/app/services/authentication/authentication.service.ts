@@ -1,53 +1,57 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
 
-  private localStorageKey = 'users';
-  userLoggedIn!: Observable<boolean>; // An observable to subscribe in need on other components
-  observableLoginChange = new BehaviorSubject<boolean>(false)
+  private dbPath = '/users'; // Firebase path for users
+  userLoggedIn!: Observable<boolean>; // An observable to subscribe in other components
+  observableLoginChange = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) {
-    
+  constructor(private db: AngularFireDatabase) {
     this.userLoggedIn = this.observableLoginChange.asObservable();
   }
 
-  // Sign up user by storing user in local storage
-  signUp(user: any): boolean {
-    let users = this.getAllUsers();
-    const userExists = users.some((u: any) => u.username === user.username);
-
-    if (userExists) {
-      return false; // User already exists
-    }
-
-    // Push new user into users array and save to local storage
-    users.push(user);
-    localStorage.setItem(this.localStorageKey, JSON.stringify(users));
-    return true; // Successfully registered
+  // Sign up user by storing user in Firebase Realtime Database
+  signUp(user: any): Observable<boolean> {
+    return this.db.list(this.dbPath, ref => ref.orderByChild('username').equalTo(user.username))
+      .valueChanges()
+      .pipe(
+        map((users: any[]) => {
+          if (users.length === 0) {
+            this.db.list(this.dbPath).push(user);
+            return true; // Successfully registered
+          } else {
+            return false; // User already exists
+          }
+        })
+      );
   }
 
-  // Login by checking local storage data
-  login(credentials: any): boolean {
-    let users = this.getAllUsers();
-    const user = users.find((u: any) => u.username === credentials.username && u.password === credentials.password);
-
-    if (user) {
-      // Save the logged-in user info to local storage (optional)
-      localStorage.setItem('loggedInUser', JSON.stringify(user));
-      return true; // Login successful
-    }
-
-    return false; // Login failed
+  // Login by checking Firebase Realtime Database
+  login(credentials: any): Observable<boolean> {
+    return this.db.list(this.dbPath, ref => ref.orderByChild('username').equalTo(credentials.username))
+      .valueChanges()
+      .pipe(
+        map((users: any[]) => {
+          const user = users.find((u: any) => u.password === credentials.password);
+          if (user) {
+            // Optionally, store user info in local storage if needed
+            localStorage.setItem('loggedInUser', JSON.stringify(user));
+            return true; // Login successful
+          }
+          return false; // Login failed
+        })
+      );
   }
 
-  // Helper method to get all users from local storage
-  private getAllUsers(): any[] {
-    const users = localStorage.getItem(this.localStorageKey);
-    return users ? JSON.parse(users) : [];
+  // Logout functionality (can clear any local storage or Firebase auth sessions if needed)
+  logout() {
+    localStorage.removeItem('loggedInUser');
+    this.observableLoginChange.next(false);
   }
 }

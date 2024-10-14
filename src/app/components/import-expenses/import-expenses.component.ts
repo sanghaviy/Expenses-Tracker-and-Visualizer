@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import * as Papa from 'papaparse';
+import { AngularFireDatabase } from '@angular/fire/compat/database'; // Import AngularFireDatabase
+import { ToastrService } from 'ngx-toastr'; // Import Toastr for notifications
 
 interface Expense {
   name: string;
@@ -22,7 +24,7 @@ export class ImportExpensesComponent {
   csvFileName: string = ''; // Store file name
   errorMessage: string = ''; // Store error message, if any
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private db: AngularFireDatabase, private toastr: ToastrService) { } // Inject AngularFireDatabase and ToastrService
 
   // Called when a file is selected
   onFileChange(event: any) {
@@ -86,26 +88,36 @@ export class ImportExpensesComponent {
     return dateStr; // Return original if format is incorrect
   }
 
-  // Function to save imported expenses to local storage
+  // Function to save imported expenses to Firebase
+  // Function to save imported expenses to Firebase
   saveImportedExpenses() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     if (loggedInUser) {
       const userDetails = JSON.parse(loggedInUser);
-      const expensesKey = `expenses_${userDetails.username}`;
-      
-      // Retrieve existing expenses
-      const existingExpenses = JSON.parse(localStorage.getItem(expensesKey) || '[]');
-      
-      // Add the imported expenses to the existing ones
-      const updatedExpenses = [...existingExpenses, ...this.importedExpenses];
-      
-      // Save back to local storage
-      localStorage.setItem(expensesKey, JSON.stringify(updatedExpenses));
-      
-      // Navigate back to the dashboard or view expenses page
+      const sanitizedEmail = this.sanitizeEmail(userDetails.username); // Sanitize username for Firebase path
+      const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`);
+
+      // Push each imported expense individually to Firebase
+      this.importedExpenses.forEach(expense => {
+        userExpensesRef.push(expense) // Push each expense separately
+          .then(() => {
+            this.toastr.success('Imported expenses saved to Firebase successfully!', 'Success');
+          })
+          .catch(error => {
+            console.error('Error saving expenses to Firebase:', error);
+            this.errorMessage = 'Error saving expenses to Firebase.';
+          });
+      });
+
+      // Navigate back to the view expenses page after pushing all expenses
       this.router.navigate(['/view-expenses']);
     } else {
       this.errorMessage = 'User not logged in.';
     }
+  }
+
+  // Sanitize email to use in Firebase path
+  private sanitizeEmail(email: string): string {
+    return email.replace(/\./g, '_'); // Replace dots with underscores
   }
 }

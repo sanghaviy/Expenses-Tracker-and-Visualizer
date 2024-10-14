@@ -24,41 +24,20 @@ export class LoginComponent {
     private toastr: ToastrService
   ) {}
 
-  ngOnInit(): void {
-    this.checkForStoredLogin();
-  }
-
-  togglePasswordVisibility() {
-    this.passwordType = this.passwordType === 'password' ? 'text' : 'password';
-  }
-
-  checkForStoredLogin() {
-    const storedUser = localStorage.getItem('username');
-    if (storedUser) {
-      this.loginForm.patchValue({
-        username: storedUser
-      });
-    }
-  }
-
   login() {
     if (this.loginForm.invalid) {
       this.formvalid = true;
       return;
     }
 
-    const loginSuccess = this.authService.login(this.loginForm.value);
-
-    if (loginSuccess) {
-      localStorage.setItem('username', this.loginForm.value.username);
-      this.toastr.success('Login successful!');
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.toastr.error('Invalid credentials');
-    }
-  }
-
-  clearStoredLogin() {
-    localStorage.removeItem('username');
+    this.authService.login(this.loginForm.value).subscribe(loginSuccess => {
+      if (loginSuccess) {
+        localStorage.setItem('username', this.loginForm.value.username);
+        this.toastr.success('Login successful!');
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.toastr.error('Invalid credentials');
+      }
+    });
   }
 }

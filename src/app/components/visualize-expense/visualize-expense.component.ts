@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import * as Highcharts from 'highcharts';
+import { Observable } from 'rxjs';
 
 interface Expense {
   name: string;
@@ -26,35 +28,49 @@ export class VisualizeExpenseComponent implements OnInit {
   pieChartOptions!: Highcharts.Options;
   barChartOptions!: Highcharts.Options;
   lineChartOptions!: Highcharts.Options;
-  tableData: Expense[] = []; // Specify the type for table data
+  tableData: Expense[] = [];
   stackedBarChartOptions!: Highcharts.Options;
   movingAverageLineOptions!: Highcharts.Options;
   heatmapOptions!: Highcharts.Options;
-  expenses: any[] = [];
+  expenses: Expense[] = []; // Change to Expense[]
   summaryData: any[] = [];
 
-  constructor() {}
+  constructor(private db: AngularFireDatabase) {}
 
   ngOnInit() {
+    this.loadLoggedInUserExpenses();
+  }
+
+  loadLoggedInUserExpenses() {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
     const username = loggedInUser.username;
+    console.log('Logged in user:', username);
     this.fetchExpenses(username);
   }
 
   fetchExpenses(username: string): void {
-    const expensesKey = `expenses_${username}`;
-    this.expenses = JSON.parse(localStorage.getItem(expensesKey) || '[]');
-    
-    this.tableData = this.expenses; // Store expenses for table view
+    const sanitizedUsername = this.sanitizeUsername(username);
+    const expensesRef = this.db.list<Expense>(`expenses/${sanitizedUsername}`);
 
-    // Set up the chart options with fetched expenses
-    this.pieChartOptions = this.getPieChartOptions(this.expenses);
-    this.barChartOptions = this.getBarChartOptions(this.expenses);
-    this.lineChartOptions = this.getLineChartOptions(this.expenses);
-    this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
-    this.movingAverageLineOptions = this.getMovingAverageLineOptions(this.expenses);
-    this.heatmapOptions = this.getHeatmapOptions(this.expenses);
-    this.calculateSummary();
+    expensesRef.valueChanges().subscribe((expenses) => {
+      console.log('Fetched expenses:', expenses);
+      this.expenses = expenses; // Update expenses from Firebase
+      this.tableData = this.expenses; // Store expenses for table view
+
+      // Set up the chart options with fetched expenses
+      this.pieChartOptions = this.getPieChartOptions(this.expenses);
+      this.barChartOptions = this.getBarChartOptions(this.expenses);
+      this.lineChartOptions = this.getLineChartOptions(this.expenses);
+      this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
+      this.movingAverageLineOptions = this.getMovingAverageLineOptions(this.expenses);
+      this.heatmapOptions = this.getHeatmapOptions(this.expenses);
+      this.calculateSummary();
+    });
+  }
+
+  // Sanitize username for Firebase key (replace . with _)
+  sanitizeUsername(username: string): string {
+    return username.replace(/\./g, '_'); // Use underscores instead of dots for Firebase key
   }
 
   getPieChartOptions(expenses: Expense[]): Highcharts.Options {
@@ -188,17 +204,17 @@ export class VisualizeExpenseComponent implements OnInit {
     return movingAverage;
   }
 
-  getHeatmapOptions(expenses: any[]) {
+  getHeatmapOptions(expenses: Expense[]) {
     const heatmapData: any[] = [];
     const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
+
     expenses.forEach(expense => {
       const date = new Date(expense.date);
       const day = date.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
       const categoryIndex = day === 0 ? 6 : day - 1; // Adjusting index for heatmap to start from Mon
       heatmapData.push([categoryIndex, expense.category, expense.totalAmount]);
     });
-  
+
     return {
       chart: { type: 'heatmap', plotBorderWidth: 1 },
       title: { text: 'Heatmap of Expenses by Day and Category' },
@@ -210,7 +226,7 @@ export class VisualizeExpenseComponent implements OnInit {
         maxColor: '#FF0000',
       },
       series: [{
-        type: 'heatmap',  // Add this line
+        type: 'heatmap',
         name: 'Expenses',
         borderWidth: 1,
         data: heatmapData,
@@ -221,7 +237,6 @@ export class VisualizeExpenseComponent implements OnInit {
       }],
     } as Highcharts.Options;
   }
-  
 
   getCategoryData(expenses: Expense[]): CategoryData[] {
     const categoryMap = expenses.reduce((acc: { [key: string]: number }, expense: Expense) => {
@@ -239,30 +254,25 @@ export class VisualizeExpenseComponent implements OnInit {
   }
 
   calculateSummary() {
-    debugger
     const summaryMap = new Map<string, { totalAmount: number, taxAmount: number, expenseCount: number }>();
 
     this.expenses.forEach(expense => {
-      const type = expense.category; // Use category as the expense type
-      const amount = expense.totalAmount;
-      const tax = expense.taxAmount;
-
+      const type = expense.paymentType; // Assuming paymentType is used for summary categorization
       if (!summaryMap.has(type)) {
         summaryMap.set(type, { totalAmount: 0, taxAmount: 0, expenseCount: 0 });
       }
-
       const summaryEntry = summaryMap.get(type)!;
-      summaryEntry.totalAmount += amount; // Add total amount
-      summaryEntry.taxAmount += tax; // Add tax amount
-      summaryEntry.expenseCount += 1; // Increment expense count
+      summaryEntry.totalAmount += expense.totalAmount;
+      summaryEntry.taxAmount += expense.taxAmount;
+      summaryEntry.expenseCount += 1;
     });
 
-    // Convert the map to an array for display
-    this.summaryData = Array.from(summaryMap.entries()).map(([type, summary]) => ({
+    this.summaryData = Array.from(summaryMap.entries()).map(([type, data]) => ({
       expenseType: type,
-      totalAmount: summary.totalAmount,
-      taxAmount: summary.taxAmount,
-      expenseCount: summary.expenseCount
+      totalAmount: data.totalAmount,
+      taxAmount: data.taxAmount,
+      expenseCount: data.expenseCount,
     }));
+    console.log('Summary Data:', this.summaryData);
   }
 }

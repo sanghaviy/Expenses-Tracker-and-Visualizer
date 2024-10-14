@@ -21,6 +21,11 @@ import { VisualizeExpenseComponent } from './components/visualize-expense/visual
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ImportExpensesComponent } from './components/import-expenses/import-expenses.component';
 
+// Firebase imports
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { environment } from 'src/environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,8 +39,7 @@ import { ImportExpensesComponent } from './components/import-expenses/import-exp
     AddExpensesComponent,
     ViewExpensesComponent,
     VisualizeExpenseComponent,
-    ImportExpensesComponent,
-    
+    ImportExpensesComponent
   ],
   imports: [
     BrowserModule,
@@ -46,6 +50,8 @@ import { ImportExpensesComponent } from './components/import-expenses/import-exp
     HttpClientModule,
     ReactiveFormsModule,
     HighchartsChartModule,
+    AngularFireModule.initializeApp(environment.firebase), // Firebase initialization
+    AngularFireDatabaseModule,  // Firebase Database module
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
     }),
