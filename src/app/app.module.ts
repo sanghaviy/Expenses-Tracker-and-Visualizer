@@ -17,6 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ViewExpensesComponent } from './components/view-expenses/view-expenses.component';
+import { VisualizeExpenseComponent } from './components/visualize-expense/visualize-expense.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,7 @@ import { ViewExpensesComponent } from './components/view-expenses/view-expenses.
     DashboardComponent,
     AddExpensesComponent,
     ViewExpensesComponent,
+    VisualizeExpenseComponent,
     
   ],
   imports: [
@@ -40,6 +43,7 @@ import { ViewExpensesComponent } from './components/view-expenses/view-expenses.
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
+    HighchartsChartModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
     }),
