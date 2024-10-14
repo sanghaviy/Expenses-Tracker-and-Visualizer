@@ -12,7 +12,7 @@
 
             <!-- Total Amount Field -->
             <input type="number" id="total-amount" formControlName="totalAmount" class="form-control"
-                placeholder="* Total Amount" required>
+                placeholder="* Total Amount ($)" required>
             <div *ngIf="expenseForm.get('totalAmount')?.touched && expenseForm.get('totalAmount')?.invalid"
                 class="text-danger">
                 <small *ngIf="expenseForm.get('totalAmount')?.errors?.['required']">Total amount is required.</small>
@@ -21,7 +21,7 @@
 
             <!-- Tax Amount Field -->
             <input type="number" id="tax-amount" formControlName="taxAmount" class="form-control"
-                placeholder="* Tax Amount" required>
+                placeholder="* Tax Amount (Total - Actual Amount) ($)" required>
             <div *ngIf="expenseForm.get('taxAmount')?.touched && expenseForm.get('taxAmount')?.invalid"
                 class="text-danger">
                 <small *ngIf="expenseForm.get('taxAmount')?.errors?.['required']">Tax amount is required.</small>
@@ -50,8 +50,12 @@
             </div>
 
             <!-- Payment Type Field -->
-            <input type="text" id="payment-type" formControlName="paymentType" class="form-control"
-                placeholder="* Payment Type" required>
+            <select id="payment-type" formControlName="paymentType" class="form-control" required style="height: auto;">
+                <option value="" disabled selected>* Payment Type</option>
+                <option value="credit">Credit</option>
+                <option value="debit">Debit</option>
+                <option value="cash">Cash</option>
+            </select>
             <div *ngIf="expenseForm.get('paymentType')?.touched && expenseForm.get('paymentType')?.invalid"
                 class="text-danger">
                 <small *ngIf="expenseForm.get('paymentType')?.errors?.['required']">Payment type is required.</small>
@@ -114,8 +118,7 @@
         <p [ngClass]="{
         'text-success': spendingPercentage < 50,
         'text-warning': spendingPercentage >= 50 && spendingPercentage < 80,
-        'text-danger': spendingPercentage >= 80 }"
-        class="spending-limit font-weight-bold" style="font-size: 15px;">
+        'text-danger': spendingPercentage >= 80 }" class="spending-limit font-weight-bold" style="font-size: 15px;">
             Total Spend Amount: {{selectedCurrencyValue.symbol}} {{totalSpent.toFixed(2)}}
             <br>
             Total Spent Percent: {{ spendingPercentage.toFixed(2) }}%
