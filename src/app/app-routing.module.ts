@@ -4,6 +4,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddExpensesComponent } from './components/add-expenses/add-expenses.component';
+import { ViewExpensesComponent } from './components/view-expenses/view-expenses.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'addexpense', component: AddExpensesComponent },
+  { path: 'view-expenses', component: ViewExpensesComponent },
   { path: '**', redirectTo: '/login' },
 ];
 
