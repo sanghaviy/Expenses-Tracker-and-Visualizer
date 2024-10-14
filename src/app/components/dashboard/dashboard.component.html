@@ -1,6 +1,7 @@
 <br>
-<h2 class="text-left font-weight-bold text headertxt">Welcome {{userDetails?.firstName}} !!</h2>
-<div class="container-class-1">
+<h2 class="text-left font-weight-bold text headertxt mx-2">Welcome {{ this.userDetails?.firstName }} !!</h2>
+
+<div class="container-class-1" *ngIf="showNoExpenses; else expensesList">
     <img class="class-2" src="../../../assets/images/TasksList.png" alt="Tasks">
     <div class="class-3 d-flex flex-column">
         <h1>No Expenses Data</h1>
@@ -8,3 +9,7 @@
         <input type="submit" value="+ Add Expense" class="btn btn-block btn-primary textBg border-0" (click)="AddExpenses()">
     </div>
 </div>
+
+<ng-template #expensesList>
+    <app-view-expenses></app-view-expenses>
+</ng-template>

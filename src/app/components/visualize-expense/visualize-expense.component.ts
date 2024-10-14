@@ -30,6 +30,8 @@ export class VisualizeExpenseComponent implements OnInit {
   stackedBarChartOptions!: Highcharts.Options;
   movingAverageLineOptions!: Highcharts.Options;
   heatmapOptions!: Highcharts.Options;
+  expenses: any[] = [];
+  summaryData: any[] = [];
 
   constructor() {}
 
@@ -41,17 +43,18 @@ export class VisualizeExpenseComponent implements OnInit {
 
   fetchExpenses(username: string): void {
     const expensesKey = `expenses_${username}`;
-    const expenses: Expense[] = JSON.parse(localStorage.getItem(expensesKey) || '[]');
+    this.expenses = JSON.parse(localStorage.getItem(expensesKey) || '[]');
     
-    this.tableData = expenses; // Store expenses for table view
+    this.tableData = this.expenses; // Store expenses for table view
 
     // Set up the chart options with fetched expenses
-    this.pieChartOptions = this.getPieChartOptions(expenses);
-    this.barChartOptions = this.getBarChartOptions(expenses);
-    this.lineChartOptions = this.getLineChartOptions(expenses);
-    this.stackedBarChartOptions = this.getStackedBarChartOptions(expenses);
-    this.movingAverageLineOptions = this.getMovingAverageLineOptions(expenses);
-    this.heatmapOptions = this.getHeatmapOptions(expenses);
+    this.pieChartOptions = this.getPieChartOptions(this.expenses);
+    this.barChartOptions = this.getBarChartOptions(this.expenses);
+    this.lineChartOptions = this.getLineChartOptions(this.expenses);
+    this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
+    this.movingAverageLineOptions = this.getMovingAverageLineOptions(this.expenses);
+    this.heatmapOptions = this.getHeatmapOptions(this.expenses);
+    this.calculateSummary();
   }
 
   getPieChartOptions(expenses: Expense[]): Highcharts.Options {
@@ -232,6 +235,34 @@ export class VisualizeExpenseComponent implements OnInit {
     return Object.entries(categoryMap).map(([name, totalAmount]) => ({
       name,
       y: totalAmount,
+    }));
+  }
+
+  calculateSummary() {
+    debugger
+    const summaryMap = new Map<string, { totalAmount: number, taxAmount: number, expenseCount: number }>();
+
+    this.expenses.forEach(expense => {
+      const type = expense.category; // Use category as the expense type
+      const amount = expense.totalAmount;
+      const tax = expense.taxAmount;
+
+      if (!summaryMap.has(type)) {
+        summaryMap.set(type, { totalAmount: 0, taxAmount: 0, expenseCount: 0 });
+      }
+
+      const summaryEntry = summaryMap.get(type)!;
+      summaryEntry.totalAmount += amount; // Add total amount
+      summaryEntry.taxAmount += tax; // Add tax amount
+      summaryEntry.expenseCount += 1; // Increment expense count
+    });
+
+    // Convert the map to an array for display
+    this.summaryData = Array.from(summaryMap.entries()).map(([type, summary]) => ({
+      expenseType: type,
+      totalAmount: summary.totalAmount,
+      taxAmount: summary.taxAmount,
+      expenseCount: summary.expenseCount
     }));
   }
 }

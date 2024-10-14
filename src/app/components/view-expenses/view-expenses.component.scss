@@ -72,3 +72,40 @@
     font-weight: normal;
     margin: 0;
 }
+
+.pagination-controls {
+    display: flex;
+    justify-content: center; // Center the pagination controls
+    align-items: center; // Center items vertically
+    margin-top: 20px; // Space above the pagination controls
+
+    button {
+        background-color: #ff810c; // Button background color
+        color: white; // Button text color
+        border: none; // No border
+        border-radius: 4px; // Rounded corners
+        padding: 10px 15px; // Padding for the button
+        cursor: pointer; // Change cursor to pointer
+        font-weight: bold; // Bold text
+        transition: background-color 0.3s; // Smooth background color transition
+
+        &:hover {
+            background-color: #e37c0e; // Background color on hover
+        }
+
+        &:disabled {
+            background-color: #ccc; // Background color for disabled state
+            cursor: not-allowed; // Change cursor to not-allowed
+        }
+
+        &:not(:last-child) {
+            margin-right: 10px; // Space between buttons
+        }
+    }
+
+    span {
+        margin: 0 15px; // Space around the page number text
+        font-size: 16px; // Font size for the page number
+        color: #333; // Text color for the page number
+    }
+}
