@@ -19,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ViewExpensesComponent } from './components/view-expenses/view-expenses.component';
 import { VisualizeExpenseComponent } from './components/visualize-expense/visualize-expense.component';
 import { HighchartsChartModule } from 'highcharts-angular';
+import { ImportExpensesComponent } from './components/import-expenses/import-expenses.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { HighchartsChartModule } from 'highcharts-angular';
     AddExpensesComponent,
     ViewExpensesComponent,
     VisualizeExpenseComponent,
+    ImportExpensesComponent,
     
   ],
   imports: [

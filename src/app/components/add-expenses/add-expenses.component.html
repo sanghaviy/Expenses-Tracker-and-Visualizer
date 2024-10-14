@@ -52,9 +52,9 @@
             <!-- Payment Type Field -->
             <select id="payment-type" formControlName="paymentType" class="form-control" required style="height: auto;">
                 <option value="" disabled selected>* Payment Type</option>
-                <option value="credit">Credit</option>
-                <option value="debit">Debit</option>
-                <option value="cash">Cash</option>
+                <option value="Credit">Credit</option>
+                <option value="Debit">Debit</option>
+                <option value="Cash">Cash</option>
             </select>
             <div *ngIf="expenseForm.get('paymentType')?.touched && expenseForm.get('paymentType')?.invalid"
                 class="text-danger">
@@ -136,7 +136,7 @@
         </div>
 
         <div class="button-container">
-            <button class="btn btn-orange">Import Expenses</button>
+            <button class="btn btn-orange" routerLink="/import-expenses">Import Expenses</button>
             <button class="btn btn-orange" routerLink="/view-expenses">View Expenses</button>
         </div>
     </div>

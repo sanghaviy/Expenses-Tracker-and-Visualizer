@@ -1,0 +1,95 @@
+<div class="import-expenses-container mt-2">
+    <div class="scrollable-container">
+        <h3 class="mb-1">Import Expenses from CSV</h3>
+
+        <!-- Hint for CSV format -->
+        <div class="csv-format-hint">
+            <p class="mb-1"><strong>Required CSV Format:</strong></p>
+            <table class="csv-format-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Field Header</th>
+                        <th>Format/Requirement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>name</td>
+                        <td>Required</td>
+                    </tr>
+                    <tr>
+                        <td>Total Amount</td>
+                        <td>totalAmount</td>
+                        <td>Required</td>
+                    </tr>
+                    <tr>
+                        <td>Tax Amount</td>
+                        <td>taxAmount</td>
+                        <td>Required</td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td>category</td>
+                        <td>Not required. Defaults to "Unassigned"</td>
+                    </tr>
+                    <tr>
+                        <td>Date</td>
+                        <td>date</td>
+                        <td>Required format: MM/DD/YYYY</td>
+                    </tr>
+                    <tr>
+                        <td>Payment Type</td>
+                        <td>paymentType</td>
+                        <td>Not required. Defaults to "Debit". Valid values: Debit, Credit, or Cash</td>
+                    </tr>
+                    <tr>
+                        <td>Comments</td>
+                        <td>comments</td>
+                        <td>Not required</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="file-upload-container">
+            <label for="csvFile">Select CSV File:</label>
+            <input type="file" id="csvFile" (change)="onFileChange($event)" style="color: brown;" accept=".csv" />
+        </div>
+
+        <!-- Display errors if any -->
+        <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+        <!-- Show imported expenses -->
+        <table *ngIf="importedExpenses.length > 0" class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Total Amount</th>
+                    <th>Tax Amount</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Payment Type</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let expense of importedExpenses">
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.totalAmount }}</td>
+                    <td>{{ expense.taxAmount }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>{{ expense.date | date: 'dd-MM-yyyy' }}</td>
+                    <td>{{ expense.paymentType }}</td>
+                    <td>{{ expense.comments }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Save Button -->
+        <button class="btn" (click)="saveImportedExpenses()" *ngIf="importedExpenses.length > 0">
+            Save Imported Expenses
+        </button>
+    </div>
+</div>

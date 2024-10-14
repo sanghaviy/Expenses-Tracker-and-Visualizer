@@ -6,6 +6,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AddExpensesComponent } from './components/add-expenses/add-expenses.component';
 import { ViewExpensesComponent } from './components/view-expenses/view-expenses.component';
 import { VisualizeExpenseComponent } from './components/visualize-expense/visualize-expense.component';
+import { ImportExpensesComponent } from './components/import-expenses/import-expenses.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'addexpense', component: AddExpensesComponent },
   { path: 'view-expenses', component: ViewExpensesComponent },
   { path: 'visualize', component: VisualizeExpenseComponent },
+  { path: 'import-expenses', component: ImportExpensesComponent },
   { path: '**', redirectTo: '/login' },
 ];
 
