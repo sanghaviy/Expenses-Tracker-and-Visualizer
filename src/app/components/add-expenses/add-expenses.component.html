@@ -3,37 +3,43 @@
         <h2>Enter Expense</h2>
         <p>* Please enter the required fields to save new expense!</p>
         <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()">
-    
             <!-- Name Field -->
-            <input type="text" id="expense-name" formControlName="name" class="form-control" placeholder="* Expense Name" required>
+            <input type="text" id="expense-name" formControlName="name" class="form-control"
+                placeholder="* Expense Name" required>
             <div *ngIf="expenseForm.get('name')?.touched && expenseForm.get('name')?.invalid" class="text-danger">
                 <small *ngIf="expenseForm.get('name')?.errors?.['required']">Name is required.</small>
             </div>
-        
+
             <!-- Total Amount Field -->
-            <input type="number" id="total-amount" formControlName="totalAmount" class="form-control" placeholder="* Total Amount" required>
-            <div *ngIf="expenseForm.get('totalAmount')?.touched && expenseForm.get('totalAmount')?.invalid" class="text-danger">
+            <input type="number" id="total-amount" formControlName="totalAmount" class="form-control"
+                placeholder="* Total Amount" required>
+            <div *ngIf="expenseForm.get('totalAmount')?.touched && expenseForm.get('totalAmount')?.invalid"
+                class="text-danger">
                 <small *ngIf="expenseForm.get('totalAmount')?.errors?.['required']">Total amount is required.</small>
                 <small *ngIf="expenseForm.get('totalAmount')?.errors?.['min']">Total amount must be at least 1.</small>
             </div>
-        
+
             <!-- Tax Amount Field -->
-            <input type="number" id="tax-amount" formControlName="taxAmount" class="form-control" placeholder="* Tax Amount" required>
-            <div *ngIf="expenseForm.get('taxAmount')?.touched && expenseForm.get('taxAmount')?.invalid" class="text-danger">
+            <input type="number" id="tax-amount" formControlName="taxAmount" class="form-control"
+                placeholder="* Tax Amount" required>
+            <div *ngIf="expenseForm.get('taxAmount')?.touched && expenseForm.get('taxAmount')?.invalid"
+                class="text-danger">
                 <small *ngIf="expenseForm.get('taxAmount')?.errors?.['required']">Tax amount is required.</small>
                 <small *ngIf="expenseForm.get('taxAmount')?.errors?.['min']">Tax amount must be non-negative.</small>
             </div>
-        
+
             <!-- Category Field -->
-            <select id="expense-category" formControlName="category" class="form-control" required style="height: auto;">
+            <select id="expense-category" formControlName="category" class="form-control" required
+                style="height: auto;">
                 <option value="" disabled selected>* Expense Category</option>
                 <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
                 <option value="unassigned">Unassigned</option>
             </select>
-            <div *ngIf="expenseForm.get('category')?.touched && expenseForm.get('category')?.invalid" class="text-danger">
+            <div *ngIf="expenseForm.get('category')?.touched && expenseForm.get('category')?.invalid"
+                class="text-danger">
                 <small *ngIf="expenseForm.get('category')?.errors?.['required']">Category is required.</small>
             </div>
-        
+
             <!-- Date Field -->
             <div class="form-group">
                 <label for="expense-date" class="placeholder-label">* Expense Date</label>
@@ -42,20 +48,22 @@
                     <small *ngIf="expenseForm.get('date')?.errors?.['required']">Date is required.</small>
                 </div>
             </div>
-        
+
             <!-- Payment Type Field -->
-            <input type="text" id="payment-type" formControlName="paymentType" class="form-control" placeholder="* Payment Type" required>
-            <div *ngIf="expenseForm.get('paymentType')?.touched && expenseForm.get('paymentType')?.invalid" class="text-danger">
+            <input type="text" id="payment-type" formControlName="paymentType" class="form-control"
+                placeholder="* Payment Type" required>
+            <div *ngIf="expenseForm.get('paymentType')?.touched && expenseForm.get('paymentType')?.invalid"
+                class="text-danger">
                 <small *ngIf="expenseForm.get('paymentType')?.errors?.['required']">Payment type is required.</small>
             </div>
-        
+
             <!-- Comments Field (Optional) -->
-            <textarea id="comments" class="mt-2 form-control" formControlName="comments" placeholder="Comments" rows="1"></textarea>
-        
+            <textarea id="comments" class="mt-2 form-control" formControlName="comments" placeholder="Comments"
+                rows="1"></textarea>
+
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary" [disabled]="expenseForm.invalid">Submit Expense</button>
         </form>
-        
     </div>
 
     <div class="add-category" style="border: 2px solid #d2caca;">
@@ -78,32 +86,51 @@
                 <button class="btn btn-orange" (click)="saveCategories()">Save</button>
             </div>
         </div>
-        
+
         <br>
         <!-- Monthly Budget Input and Currency Dropdown -->
         <h2>Set Monthly Budget</h2>
         <div class="budget-input-group" style="display: flex; align-items: center;">
-            <input type="number" id="monthly-budget" [(ngModel)]="monthlyBudgetValue" placeholder="Enter Budget" required 
-                   style="flex: 1; padding: 0.5em; border: 1px solid #ccc;">
-            
+            <input type="number" id="monthly-budget" [(ngModel)]="monthlyBudgetValue" placeholder="Enter Budget"
+                required style="flex: 1; padding: 0.5em; border: 1px solid #ccc;">
+
             <!-- Styled Dropdown for currency selection -->
-            <select id="currency-select" [(ngModel)]="selectedCurrencyValue" 
-                    class="btn-currency" style="margin-left: 10px;">
-                <option *ngFor="let currency of currencies" [ngValue]="currency">
-                    {{ currency.symbol }} - {{ currency.name }}
-                </option>
+            <select id="currency-select" [(ngModel)]="selectedCurrencyValue" class="btn-currency"
+                style="margin-left: 10px;">
+                <option *ngFor="let currency of currencies" [ngValue]="currency">{{ currency.symbol }} - {{
+                    currency.name }}</option>
             </select>
 
             <!-- Save/Update button -->
-            <button class="btn btn-orange" (click)="saveBudget()" style="margin: 0px 0px 15px 10px">
-                Save Budget
-            </button>
+            <button class="btn btn-orange" (click)="saveBudget()" style="margin: 0px 0px 15px 10px">Save Budget</button>
         </div>
-        
+
         <!-- Display Current Budget with Currency -->
         <p class="current-budget font-weight-bold" style="font-size: 20px;">
-            Current Budget: {{ selectedCurrency.symbol }} {{ (monthlyBudget || 0).toFixed(2) }}
+            Current Budget: {{ selectedCurrencyValue.symbol }} {{ (monthlyBudgetValue || 0).toFixed(2) }}
         </p>
+
+        <!-- Display Spending Limit -->
+        <p [ngClass]="{
+        'text-success': spendingPercentage < 50,
+        'text-warning': spendingPercentage >= 50 && spendingPercentage < 80,
+        'text-danger': spendingPercentage >= 80 }"
+        class="spending-limit font-weight-bold" style="font-size: 15px;">
+            Total Spend Amount: {{selectedCurrencyValue.symbol}} {{totalSpent.toFixed(2)}}
+            <br>
+            Total Spent Percent: {{ spendingPercentage.toFixed(2) }}%
+        </p>
+
+        <!-- Warning and Danger Messages -->
+        <div *ngIf="spendingPercentage >= 80" class="alert alert-danger">
+            Danger: You are nearing or have exceeded your spending limit!
+        </div>
+        <div *ngIf="spendingPercentage >= 50 && spendingPercentage < 80" class="alert alert-warning">
+            Warning: You are approaching your spending limit!
+        </div>
+        <div *ngIf="spendingPercentage < 50" class="alert alert-success">
+            You're doing well with your spending.
+        </div>
 
         <div class="button-container">
             <button class="btn btn-orange">Import Expenses</button>
