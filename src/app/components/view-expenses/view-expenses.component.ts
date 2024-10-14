@@ -3,16 +3,16 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-view-expenses',
   templateUrl: './view-expenses.component.html',
-  styleUrls: ['./view-expenses.component.scss']
+  styleUrls: ['./view-expenses.component.scss'],
 })
 export class ViewExpensesComponent implements OnInit {
   expenses: any[] = [];
-  username: string = ''; // To store the username from localStorage
+  username: string = '';
   expensesKey: string = '';
 
   ngOnInit() {
-    this.loadLoggedInUser(); // Load the logged-in user data
-    this.loadExpenses();      // Load the expenses associated with that user
+    this.loadLoggedInUser();
+    this.loadExpenses();
   }
 
   loadLoggedInUser() {
@@ -20,12 +20,10 @@ export class ViewExpensesComponent implements OnInit {
     if (loggedInUser) {
       try {
         const userData = JSON.parse(loggedInUser);
-        this.username = userData.username; // Extract the username
+        this.username = userData.username;
       } catch (error) {
         console.error('Failed to parse logged-in user data', error);
       }
-    } else {
-      console.warn('No user is currently logged in.');
     }
   }
 
@@ -37,15 +35,16 @@ export class ViewExpensesComponent implements OnInit {
         try {
           this.expenses = JSON.parse(savedExpenses) || [];
         } catch (error) {
-          console.error('Failed to load expenses data from localStorage', error);
+          console.error(
+            'Failed to load expenses data from localStorage',
+            error
+          );
         }
       } else {
-        // Show an empty message or handle no expenses case
         this.expenses = [];
-        console.warn('No expenses found for this user.');
       }
     } else {
-      this.expenses = []; // No username found
+      this.expenses = [];
     }
   }
 }

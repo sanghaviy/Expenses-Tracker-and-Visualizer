@@ -18,7 +18,7 @@
   color: #FF810C;
   font-weight: normal;
   margin: 0;
-  text-align: left; /* Align header text to the left */
+  text-align: left;
 }
 
 .button-container {
@@ -48,104 +48,102 @@
 }
 
 .scrollable-container {
-  max-height: 72vh; /* Set maximum height */
-  overflow-y: auto; /* Allow vertical scrolling */
-  width: 100%; /* Full width */
-  border: 1px solid #ccc; /* Optional border */
-  border-radius: 5px; /* Optional rounded corners */
-  padding: 10px; /* Optional padding */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  max-height: 72vh;
+  overflow-y: auto;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .summary-and-trends-container {
-  display: flex; /* Use flex to align charts */
-  flex-direction: column; /* Allow trends chart to be below */
-  width: 100%; /* Full width */
-  margin-top: 20px; /* Space above summaries */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .summary-charts {
-  display: flex; /* Align charts side by side */
-  justify-content: space-between; /* Space between charts */
-  flex-wrap: wrap; /* Allow wrapping of charts if needed */
-  overflow-x: auto; /* Allow horizontal scrolling */
-  margin-bottom: 20px; /* Space below summary charts */
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  margin-bottom: 20px;
 }
 
 .chart-rows {
-  display: flex; /* Align chart rows side by side */
-  justify-content: space-between; /* Space between the two chart rows */
-  flex-wrap: wrap; /* Allow wrapping if needed */
-  margin-bottom: 20px; /* Space below the chart rows */
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
-
 .chart-row {
-  display: flex; /* Use flexbox to arrange charts side by side */
-  justify-content: space-between; /* Space between charts */
-  margin-bottom: 20px; /* Space below chart row */
-  min-width: 300px; /* Minimum width for each row */
-  max-width: 48%; /* Maximum width to ensure they fit side by side */
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  min-width: 300px;
+  max-width: 48%;
 }
 
 .trends-container {
-  width: 100%; /* Full width */
-  margin-top: 20px; /* Space above trends chart */
+  width: 100%;
+  margin-top: 20px;
 }
 
-/* Additional styles for the table */
 table {
-  width: 100%; /* Make the table responsive */
-  border-collapse: collapse; /* Optional for cleaner look */
+  width: 100%;
+  border-collapse: collapse;
 }
 
 th, td {
-  border: 1px solid #ddd; /* Optional border */
-  padding: 8px; /* Add padding to cells */
-  text-align: left; /* Align text to the left */
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
 }
 
 th {
-  background-color: #f2f2f2; /* Light background for headers */
+  background-color: #f2f2f2;
 }
 
 .chart-container {
-  flex: 1; /* Allow the chart containers to grow equally */
-  margin: 0 5px; /* Reduced margin for spacing */
-  min-width: 250px; /* Minimum width for the chart */
-  max-width: 45%; /* Ensure that two charts fit side by side */
+  flex: 1;
+  margin: 0 5px;
+  min-width: 250px;
+  max-width: 45%;
 }
+
 .styled-table {
-  width: 90%; /* Full width */
-  border-collapse: collapse; /* Merge borders */
-  margin: 100px 50px; /* Margin above and below the table */
-  font-size: 16px; /* Font size for table text */
+  width: 90%;
+  border-collapse: collapse;
+  margin: 100px 50px;
+  font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
-
-  box-shadow: 5px 14px 18px rgba(99, 98, 98, 0.1); /* Optional shadow */
+  box-shadow: 5px 14px 18px rgba(99, 98, 98, 0.1);
 }
 
 .styled-table th,
 .styled-table td {
-  padding: 12px 15px; /* Padding inside cells */
-  border: 1px solid #ddd; /* Border for cells */
-  text-align: left; /* Align text to the left */
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
 }
 
 .styled-table th {
-  background-color: #FF810C; /* Header background color */
-  color: white; /* Header text color */
+  background-color: #FF810C;
+  color: white;
 }
 
 .styled-table tr {
-  transition: background-color 0.3s; /* Transition for hover effect */
+  transition: background-color 0.3s;
 }
 
 .styled-table tr:nth-child(even) {
-  background-color: #f2f2f2; /* Light background for even rows */
+  background-color: #f2f2f2;
 }
 
 .styled-table tr:hover {
-  background-color: #f1f1f1; /* Hover effect for rows */
+  background-color: #f1f1f1;
 }
