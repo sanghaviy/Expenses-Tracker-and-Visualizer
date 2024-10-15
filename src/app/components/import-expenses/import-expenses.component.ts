@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import * as Papa from 'papaparse';
-import { AngularFireDatabase } from '@angular/fire/compat/database'; // Import AngularFireDatabase
-import { ToastrService } from 'ngx-toastr'; // Import Toastr for notifications
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+import { ToastrService } from 'ngx-toastr';
 
 interface Expense {
   name: string;
   totalAmount: number;
   taxAmount: number;
   category: string;
-  date: string; // Keep as string for CSV parsing
+  date: string;
   paymentType: string;
   comments: string;
 }
@@ -20,13 +20,12 @@ interface Expense {
   styleUrls: ['./import-expenses.component.scss']
 })
 export class ImportExpensesComponent {
-  importedExpenses: Expense[] = []; // Store parsed expenses
-  csvFileName: string = ''; // Store file name
-  errorMessage: string = ''; // Store error message, if any
+  importedExpenses: Expense[] = [];
+  csvFileName: string = '';
+  errorMessage: string = '';
 
-  constructor(private router: Router, private db: AngularFireDatabase, private toastr: ToastrService) { } // Inject AngularFireDatabase and ToastrService
+  constructor(private router: Router, private db: AngularFireDatabase, private toastr: ToastrService) {}
 
-  // Called when a file is selected
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -35,7 +34,6 @@ export class ImportExpensesComponent {
     }
   }
 
-  // Function to parse the CSV file
   parseCSVFile(file: File) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -60,46 +58,40 @@ export class ImportExpensesComponent {
     reader.readAsText(file);
   }
 
-  // Function to map CSV data to expenses
   mapToExpenses(parsedData: Expense[]) {
     this.importedExpenses = parsedData.map(expense => {
       return {
         name: expense.name,
-        totalAmount: +expense.totalAmount, // Ensure number format
-        taxAmount: +expense.taxAmount, // Ensure number format
-        category: expense.category || 'Unassigned', // Default category
-        date: this.convertDate(expense.date), // Convert date from dd-mm-yyyy to Date
-        paymentType: expense.paymentType || 'Debit', // Default payment type
-        comments: expense.comments || 'No comments' // Default comments
+        totalAmount: +expense.totalAmount,
+        taxAmount: +expense.taxAmount,
+        category: expense.category || 'Unassigned',
+        date: this.convertDate(expense.date),
+        paymentType: expense.paymentType || 'Debit',
+        comments: expense.comments || 'No comments'
       };
     });
   }
 
-  // Function to convert date from dd-mm-yyyy format to yyyy-mm-dd
   convertDate(dateStr: string): string {
     const parts = dateStr.split('-');
     if (parts.length === 3) {
       const day = parts[0];
       const month = parts[1];
       const year = parts[2];
-      // Return date in yyyy-mm-dd format for standardization
       return `${year}-${month}-${day}`;
     }
-    return dateStr; // Return original if format is incorrect
+    return dateStr;
   }
 
-  // Function to save imported expenses to Firebase
-  // Function to save imported expenses to Firebase
   saveImportedExpenses() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     if (loggedInUser) {
       const userDetails = JSON.parse(loggedInUser);
-      const sanitizedEmail = this.sanitizeEmail(userDetails.username); // Sanitize username for Firebase path
+      const sanitizedEmail = this.sanitizeEmail(userDetails.username);
       const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`);
 
-      // Push each imported expense individually to Firebase
       this.importedExpenses.forEach(expense => {
-        userExpensesRef.push(expense) // Push each expense separately
+        userExpensesRef.push(expense)
           .then(() => {
             this.toastr.success('Imported expenses saved to Firebase successfully!', 'Success');
           })
@@ -109,15 +101,13 @@ export class ImportExpensesComponent {
           });
       });
 
-      // Navigate back to the view expenses page after pushing all expenses
       this.router.navigate(['/view-expenses']);
     } else {
       this.errorMessage = 'User not logged in.';
     }
   }
 
-  // Sanitize email to use in Firebase path
   private sanitizeEmail(email: string): string {
-    return email.replace(/\./g, '_'); // Replace dots with underscores
+    return email.replace(/\./g, '_');
   }
 }

@@ -32,7 +32,7 @@ export class VisualizeExpenseComponent implements OnInit {
   stackedBarChartOptions!: Highcharts.Options;
   movingAverageLineOptions!: Highcharts.Options;
   heatmapOptions!: Highcharts.Options;
-  expenses: Expense[] = []; // Change to Expense[]
+  expenses: Expense[] = []; 
   summaryData: any[] = [];
 
   constructor(private db: AngularFireDatabase) {}
@@ -54,8 +54,8 @@ export class VisualizeExpenseComponent implements OnInit {
 
     expensesRef.valueChanges().subscribe((expenses) => {
       console.log('Fetched expenses:', expenses);
-      this.expenses = expenses; // Update expenses from Firebase
-      this.tableData = this.expenses; // Store expenses for table view
+      this.expenses = expenses; 
+      this.tableData = this.expenses; 
 
       // Set up the chart options with fetched expenses
       this.pieChartOptions = this.getPieChartOptions(this.expenses);
@@ -70,7 +70,7 @@ export class VisualizeExpenseComponent implements OnInit {
 
   // Sanitize username for Firebase key (replace . with _)
   sanitizeUsername(username: string): string {
-    return username.replace(/\./g, '_'); // Use underscores instead of dots for Firebase key
+    return username.replace(/\./g, '_'); 
   }
 
   getPieChartOptions(expenses: Expense[]): Highcharts.Options {
@@ -195,7 +195,7 @@ export class VisualizeExpenseComponent implements OnInit {
     const movingAverage: number[] = [];
     for (let i = 0; i < data.length; i++) {
       if (i < period - 1) {
-        movingAverage.push(0); // Push 0 or a suitable default instead of null
+        movingAverage.push(0);
       } else {
         const avg = data.slice(i - period + 1, i + 1).reduce((sum, value) => sum + value, 0) / period;
         movingAverage.push(avg);
@@ -210,8 +210,8 @@ export class VisualizeExpenseComponent implements OnInit {
 
     expenses.forEach(expense => {
       const date = new Date(expense.date);
-      const day = date.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
-      const categoryIndex = day === 0 ? 6 : day - 1; // Adjusting index for heatmap to start from Mon
+      const day = date.getDay(); 
+      const categoryIndex = day === 0 ? 6 : day - 1; 
       heatmapData.push([categoryIndex, expense.category, expense.totalAmount]);
     });
 
@@ -257,7 +257,7 @@ export class VisualizeExpenseComponent implements OnInit {
     const summaryMap = new Map<string, { totalAmount: number, taxAmount: number, expenseCount: number }>();
 
     this.expenses.forEach(expense => {
-      const type = expense.paymentType; // Assuming paymentType is used for summary categorization
+      const type = expense.paymentType; 
       if (!summaryMap.has(type)) {
         summaryMap.set(type, { totalAmount: 0, taxAmount: 0, expenseCount: 0 });
       }

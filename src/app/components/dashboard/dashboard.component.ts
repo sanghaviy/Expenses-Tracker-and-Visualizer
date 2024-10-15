@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AngularFireDatabase } from '@angular/fire/compat/database'; // Import AngularFireDatabase
+import { AngularFireDatabase } from '@angular/fire/compat/database';
+
 interface Expense {
   name: string;
   totalAmount: number;
@@ -10,6 +11,7 @@ interface Expense {
   paymentType: string;
   comments: string;
 }
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -17,59 +19,55 @@ interface Expense {
 })
 export class DashboardComponent implements OnInit {
   userDetails: any;
-  username: string = '';  // Store username from localStorage
-  expenses: any[] = [];    // Store expenses
-  showNoExpenses: boolean = false; // Track whether to show the "No Expenses" message
+  username: string = '';  
+  expenses: any[] = [];    
+  showNoExpenses: boolean = false;
 
-  constructor(private router: Router, private db: AngularFireDatabase) {} // Inject AngularFireDatabase
+  constructor(private router: Router, private db: AngularFireDatabase) {}
 
   ngOnInit(): void {
-    this.loadLoggedInUser(); // Load user details
-    this.loadExpenses();      // Load expenses
+    this.loadLoggedInUser();
+    this.loadExpenses();
   }
 
-  // Load logged-in user from localStorage
   loadLoggedInUser() {
     const loggedInUser = localStorage.getItem('loggedInUser');
     if (loggedInUser) {
       try {
         this.userDetails = JSON.parse(loggedInUser);
-        this.username = this.userDetails.username; // Get the username
+        this.username = this.userDetails.username;
       } catch (error) {
         console.error('Failed to parse logged-in user data', error);
       }
     }
   }
 
-  // Load expenses from Firebase based on the username
   loadExpenses() {
     if (this.username) {
-      const sanitizedEmail = this.sanitizeEmail(this.username); // Sanitize email for Firebase path
+      const sanitizedEmail = this.sanitizeEmail(this.username);
       const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`).valueChanges();
 
       userExpensesRef.subscribe(expenses => {
-        this.expenses = expenses; // Assign fetched expenses
-        this.showNoExpenses = this.expenses.length === 0; // Update flag based on expenses
+        this.expenses = expenses;
+        this.showNoExpenses = this.expenses.length === 0;
       }, error => {
-        console.error('Error loading expenses from Firebase:', error); // Handle error
+        console.error('Error loading expenses from Firebase:', error);
       });
     } else {
-      this.expenses = []; // No username, no expenses
-      this.showNoExpenses = true; // Show "No Expenses" message
+      this.expenses = [];
+      this.showNoExpenses = true;
     }
   }
 
-  // Sanitize email to use in Firebase path
   private sanitizeEmail(email: string): string {
-    return email.replace(/\./g, '_'); // Replace dots with underscores
+    return email.replace(/\./g, '_');
   }
 
-  // This method is triggered when the ViewExpenses component emits an event
   updateNoExpensesStatus(hasExpenses: boolean) {
-    this.showNoExpenses = !hasExpenses; // Update the status based on the emitted event
+    this.showNoExpenses = !hasExpenses;
   }
 
   AddExpenses() {
-    this.router.navigate(['/addexpense']); // Navigate to add expense page
+    this.router.navigate(['/addexpense']);
   }
 }

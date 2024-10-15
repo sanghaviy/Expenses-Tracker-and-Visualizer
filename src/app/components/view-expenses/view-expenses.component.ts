@@ -1,6 +1,5 @@
   import { Component, OnInit } from '@angular/core';
   import { AngularFireDatabase } from '@angular/fire/compat/database';
-  import { Observable } from 'rxjs';
 
   @Component({
     selector: 'app-view-expenses',
@@ -13,17 +12,17 @@
     expensesKey: string = '';
 
     // Pagination properties
-    currentPage: number = 1; // Current page number
-    itemsPerPage: number = 5; // Number of items per page
-    paginatedExpenses: any[] = []; // Array to hold the expenses for the current page
-    totalPages: number = 0; // Total number of pages
+    currentPage: number = 1; 
+    itemsPerPage: number = 5; 
+    paginatedExpenses: any[] = [];
+    totalPages: number = 0; 
 
-    constructor(private db: AngularFireDatabase ) {} // Inject AngularFireDatabase
+    constructor(private db: AngularFireDatabase ) {} 
 
     ngOnInit() {
       this.loadLoggedInUser();
-      this.loadExpenses(); // Load expenses from Firebase
-      this.paginateExpenses(); // Call to initialize pagination
+      this.loadExpenses(); 
+      this.paginateExpenses(); 
     }
 
     loadLoggedInUser() {
@@ -46,8 +45,8 @@
           .valueChanges()
           .subscribe((expenses: any[]) => {
             this.expenses = expenses;
-            this.totalPages = Math.ceil(this.expenses.length / this.itemsPerPage); // Calculate total pages
-            this.paginateExpenses(); // Recalculate pagination after loading expenses
+            this.totalPages = Math.ceil(this.expenses.length / this.itemsPerPage);
+            this.paginateExpenses();
           });
       } else {
         this.expenses = [];

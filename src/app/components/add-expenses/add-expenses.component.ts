@@ -66,6 +66,7 @@ export class AddExpensesComponent implements OnInit {
     this.loadCategories();
     this.loadExpenses();
     this.calculateSpendingPercentage();
+    this.selectedCurrencyValue = this.currencies.find(currency => currency.symbol === '$') || this.currencies[0];
   }
 
   initForm() {
@@ -99,7 +100,12 @@ export class AddExpensesComponent implements OnInit {
         // this.toastr.success('Categories loaded successfully from Firebase!', 'Success');
       } else {
         // this.toastr.warning('No categories found for the user in Firebase.', 'Warning');
-        this.categories = []; // Reset categories if none are found
+        this.categories = [
+          'Groceries',
+          'Insurance',
+          'Entertainment',
+          'Dining out',
+        ];
       }
     }, error => {
       this.toastr.error('Failed to load categories from Firebase.', 'Error');
@@ -176,7 +182,7 @@ export class AddExpensesComponent implements OnInit {
   }
 
   private sanitizeEmail(email: string): string {
-    return email.replace(/\./g, '_'); // Replace dots with underscores
+    return email?.replace(/\./g, '_'); // Replace dots with underscores
   }
 
   saveExpenseToFirebase(expense: Expense) {

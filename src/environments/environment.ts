@@ -5,13 +5,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "//",
+    apiKey: "AIzaSyAh3DbZ0JW6Enbl6yItPOc5BhFHc9cp3Fc",
     authDomain: "expenses-tracker-system.firebaseapp.com",
     databaseURL: "https://expenses-tracker-system-default-rtdb.firebaseio.com",
     projectId: "expenses-tracker-system",
     storageBucket: "expenses-tracker-system.appspot.com",
     messagingSenderId: "873108457705",
-    appId: "//sanghavi prod database"
+    appId: "1:873108457705:web:747ce07393814d110f8878"
   }
 };
 

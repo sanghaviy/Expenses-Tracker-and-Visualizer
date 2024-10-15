@@ -11,13 +11,13 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 })
 export class RegisterComponent {
   formvalid: boolean = false;
-  passwordType: string = 'Password'; // Add this line
+  passwordType: string = 'Password'; 
 
   signUpForm: FormGroup = this.fb.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     username: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required]], //Validators.minLength(6)
   });
 
   constructor(
@@ -39,7 +39,7 @@ export class RegisterComponent {
         this.signUpForm.reset();
         this.router.navigate(['/login']);
       } else {
-        this.toastr.error('Username already exists');
+        // this.toastr.error('Username already exists');
       }
     });
   }
