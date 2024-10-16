@@ -5,13 +5,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyAh3DbZ0JW6Enbl6yItPOc5BhFHc9cp3Fc",
-    authDomain: "expenses-tracker-system.firebaseapp.com",
-    databaseURL: "https://expenses-tracker-system-default-rtdb.firebaseio.com",
-    projectId: "expenses-tracker-system",
-    storageBucket: "expenses-tracker-system.appspot.com",
-    messagingSenderId: "873108457705",
-    appId: "1:873108457705:web:747ce07393814d110f8878"
+    apiKey: "AIzaSyC0ChWoUmph4Ncc-pnkojPFd01dzHc6rbk",
+  authDomain: "expense-tracker-visualizer.firebaseapp.com",
+  databaseURL: "https://expense-tracker-visualizer-default-rtdb.firebaseio.com",
+  projectId: "expense-tracker-visualizer",
+  storageBucket: "expense-tracker-visualizer.appspot.com",
+  messagingSenderId: "749573738372",
+  appId: "1:749573738372:web:d8780d2615ac5438c297d1"
   }
 };
 
