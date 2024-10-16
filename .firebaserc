@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "expenses-tracker-system"
-  }
+    "default": "expense-tracker-visualizer"
+  },
+  "targets": {},
+  "etags": {}
 }
