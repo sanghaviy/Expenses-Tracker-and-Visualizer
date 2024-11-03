@@ -26,7 +26,7 @@ interface CategoryData {
 export class VisualizeExpenseComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   pieChartOptions!: Highcharts.Options;
-  pieChartTaxOptions!: Highcharts.Options;
+  taxPieChartOptions!: Highcharts.Options;
   barChartOptions!: Highcharts.Options;
   lineChartOptions!: Highcharts.Options;
   tableData: Expense[] = [];
@@ -62,7 +62,7 @@ export class VisualizeExpenseComponent implements OnInit {
 
       // Set up the chart options with fetched expenses
       this.pieChartOptions = this.getPieChartOptions(this.expenses);
-      this.pieChartTaxOptions = this.getPieChartOptions(this.expenses);
+      this.taxPieChartOptions = this.getTaxPieChartOptions(this.expenses);
       this.barChartOptions = this.getBarChartOptions(this.expenses);
       this.lineChartOptions = this.getLineChartOptions(this.expenses);
       this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
@@ -103,7 +103,7 @@ export class VisualizeExpenseComponent implements OnInit {
 
     return {
       chart: { type: 'column' },
-      title: { text: 'Monthly Summary' },
+      title: { text: 'Expense Summary' },
       xAxis: { categories: categories },
       yAxis: { title: { text: 'Total Spending Amount' } },
       series: [
@@ -161,7 +161,7 @@ export class VisualizeExpenseComponent implements OnInit {
 
     return {
       chart: { type: 'column' },
-      title: { text: 'Stacked Monthly Expenses by Category' },
+      title: { text: 'Expenses by Category' },
       xAxis: { categories: categories },
       yAxis: { title: { text: 'Total Amount' } },
       series: series,
@@ -277,34 +277,36 @@ export class VisualizeExpenseComponent implements OnInit {
       taxAmount: data.taxAmount,
       expenseCount: data.expenseCount,
     }));
-    // Calculate total amounts for the pie chart
-    this.totalAmount = this.summaryData.reduce((sum, entry) => sum + entry.totalAmount, 0);
-    this.totalTax = this.summaryData.reduce((sum, entry) => sum + entry.taxAmount, 0);
-    
-    // Update pie chart options
-    this.pieChartTaxOptions = this.getTotalVsTaxPieChartOptions(this.totalAmount, this.totalTax);
   }
   
-  // Create a new method for the Total vs Tax pie chart options
-  getTotalVsTaxPieChartOptions(totalAmount: number, totalTax: number): Highcharts.Options {
+  getTaxPieChartOptions(expenses: Expense[]): Highcharts.Options {
+    const taxData: CategoryData[] = this.getTaxData(expenses); // New function for tax data
     return {
       chart: { type: 'pie' },
-      title: { text: 'Total Amount vs Tax Amount' },
+      title: { text: 'Tax Spending by Category' },
       series: [
         {
-          name: 'Amount',
+          name: 'Tax Spending',
           type: 'pie',
-          data: [
-            { name: 'Total Amount', y: totalAmount },
-            { name: 'Tax Amount', y: totalTax }
-          ],
-          showInLegend: true,
-          dataLabels: {
-            enabled: true,
-            format: '{point.name}: {point.y:.2f}', // Format for data labels
-          }
+          data: taxData.map(item => ({ name: item.name, y: item.y })),
         },
       ],
     } as Highcharts.Options;
   }
+
+  getTaxData(expenses: Expense[]): CategoryData[] {
+    const taxMap = expenses.reduce((acc: { [key: string]: number }, expense: Expense) => {
+      if (!acc[expense.category]) {
+        acc[expense.category] = 0;
+      }
+      acc[expense.category] += expense.taxAmount; // Sum taxAmount by category
+      return acc;
+    }, {});
+
+    return Object.entries(taxMap).map(([name, totalTax]) => ({
+      name,
+      y: totalTax,
+    }));
+  }
+
 }
