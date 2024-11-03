@@ -138,13 +138,6 @@ export class AddExpensesComponent implements OnInit {
 
   saveCategories() {
     const uniqueCategories = Array.from(new Set(this.categories)); // Ensure unique categories
-    // localStorage.setItem(
-    //   `categories_${this.loggedInUser.username}`,
-    //   JSON.stringify(uniqueCategories)
-    // );
-    // this.toastr.success('Categories updated in local storage!', 'Success');
-    
-    // Now save to Firebase
     this.saveCategoriesToFirebase(uniqueCategories);
   }
 

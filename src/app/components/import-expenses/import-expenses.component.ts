@@ -89,21 +89,42 @@ export class ImportExpensesComponent {
       const userDetails = JSON.parse(loggedInUser);
       const sanitizedEmail = this.sanitizeEmail(userDetails.username);
       const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`);
-
-      this.importedExpenses.forEach(expense => {
-        userExpensesRef.push(expense)
-          .then(() => {
-            this.toastr.success('Imported expenses saved to Firebase successfully!', 'Success');
-          })
-          .catch(error => {
-            console.error('Error saving expenses to Firebase:', error);
-            this.errorMessage = 'Error saving expenses to Firebase.';
+      const fileKey = `${sanitizedEmail}_${this.csvFileName}`;
+      userExpensesRef.query.ref.once('value').then(snapshot => {
+        debugger
+        if (localStorage.getItem(fileKey) && snapshot.exists()) {
+          this.toastr.error('You have already uploaded expenses. Please check your existing expenses.', 'Error');
+          return;
+        } else {
+          let successCount = 0;
+          this.importedExpenses.forEach(expense => {
+            userExpensesRef.push(expense)
+              .then(() => {
+                successCount++;
+              })
+              .catch(error => {
+                console.error('Error saving expenses to Firebase:', error);
+                this.toastr.error('Error saving some expenses to Firebase.', 'Error');
+              })
+              .finally(() => {
+                if (successCount === this.importedExpenses.length) {
+                  localStorage.setItem(fileKey, 'uploaded');
+                  this.toastr.success('Imported expenses saved to Firebase successfully!', 'Success');
+                  this.router.navigate(['/view-expenses']);
+                }
+              });
           });
+          if (this.importedExpenses.length === 0) {
+            this.toastr.warning('No expenses to import.', 'Warning');
+            this.router.navigate(['/view-expenses']);
+          }
+        }
+      }).catch(error => {
+        console.error('Error checking existing expenses:', error);
+        this.toastr.error('Error checking existing expenses.', 'Error');
       });
-
-      this.router.navigate(['/view-expenses']);
     } else {
-      this.errorMessage = 'User not logged in.';
+      this.toastr.error('User not logged in.', 'Error');
     }
   }
 
