@@ -18,11 +18,19 @@
   background-color: #ff810c;
   color: white;
   text-align: center;
+  padding: 8px; 
+  font-size: 16px;
 }
 
 .table tbody td {
-  padding: 15px;
+  padding: 8px; 
   text-align: center;
+  font-size: 16px;
+}
+
+.pagination-controls button {
+  padding: 8px 12px; 
+  font-size: 16px;
 }
 
 .table tbody tr:hover {

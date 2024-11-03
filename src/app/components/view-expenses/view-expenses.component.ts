@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { ToastrService } from 'ngx-toastr';
+import * as bootstrap from 'bootstrap';
 
 interface Expense {
   id?: string; // Add an optional id field
@@ -27,6 +28,7 @@ export class ViewExpensesComponent implements OnInit {
   itemsPerPage: number = 4;
   paginatedExpenses: any[] = [];
   totalPages: number = 0;
+  selectedExpenseId: string | null = null;
 
   constructor(private db: AngularFireDatabase, private toastr: ToastrService) {}
 
@@ -202,11 +204,22 @@ export class ViewExpensesComponent implements OnInit {
   }
 
   confirmDelete(expenseId: string) {
-    if (confirm('Are you sure you want to delete this expense?')) {
-      this.deleteExpense(expenseId);
+    this.selectedExpenseId = expenseId;
+    const modalElement = document.getElementById('deleteModal');
+    if (modalElement) {
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
+    } else {
+      console.error('Modal element not found');
+    }
+  }  
+  
+  deleteConfirmed() {
+    if (this.selectedExpenseId) {
+      this.deleteExpense(this.selectedExpenseId);
+      this.selectedExpenseId = null;
     }
   }
-
   private sanitizeEmail(email: string): string {
     return email.replace(/\./g, '_');
   }
