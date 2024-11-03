@@ -37,6 +37,7 @@ export class VisualizeExpenseComponent implements OnInit {
   summaryData: any[] = [];
   totalAmount: number = 0;
   totalTax: number = 0;
+  hasData: boolean = false;
 
   constructor(private db: AngularFireDatabase) {}
 
@@ -60,16 +61,66 @@ export class VisualizeExpenseComponent implements OnInit {
       this.expenses = expenses; 
       this.tableData = this.expenses; 
 
-      // Set up the chart options with fetched expenses
-      this.pieChartOptions = this.getPieChartOptions(this.expenses);
-      this.taxPieChartOptions = this.getTaxPieChartOptions(this.expenses);
-      this.barChartOptions = this.getBarChartOptions(this.expenses);
-      this.lineChartOptions = this.getLineChartOptions(this.expenses);
-      this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
-      this.movingAverageLineOptions = this.getMovingAverageLineOptions(this.expenses);
-      this.heatmapOptions = this.getHeatmapOptions(this.expenses);
-      this.calculateSummary();
+      this.updateCharts(this.expenses);
+      
     });
+  }
+
+  onTimePeriodChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const period = target.value;
+    let filteredExpenses: Expense[] = [];
+    const today = new Date();
+    const todayString = today.toLocaleDateString('en-CA');
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toLocaleDateString('en-CA');
+    const startOfYear = new Date(today.getFullYear(), 0, 1).toLocaleDateString('en-CA');
+  
+    console.log("Today String:", todayString); 
+  
+    switch (period) {
+      case 'today':
+        filteredExpenses = this.expenses.filter(expense => {
+          const expenseDate = new Date(expense.date);
+          const localExpenseDate = new Date(expenseDate.getTime() - (expenseDate.getTimezoneOffset() * 60000));
+          const expenseDateString = localExpenseDate;
+          console.log("Expense Date:", expense.date); 
+          return expense.date === todayString; 
+        });
+        break;
+  
+      case 'month':
+        filteredExpenses = this.expenses.filter(expense => {
+          const expenseDate = new Date(expense.date).toLocaleDateString('en-CA');
+          return expenseDate >= startOfMonth;
+        });
+        break;
+  
+      case 'year':
+        filteredExpenses = this.expenses.filter(expense => {
+          const expenseDate = new Date(expense.date).toLocaleDateString('en-CA');
+          return expenseDate >= startOfYear;
+        });
+        break;
+  
+      case 'total':
+      default:
+        filteredExpenses = this.expenses; 
+        break;
+    }
+  
+    this.updateCharts(filteredExpenses);
+  }
+
+  // Method to update all charts based on expenses
+  updateCharts(expenses: Expense[]) {
+    this.pieChartOptions = this.getPieChartOptions(expenses);
+    this.taxPieChartOptions = this.getTaxPieChartOptions(expenses);
+    this.barChartOptions = this.getBarChartOptions(expenses);
+    this.lineChartOptions = this.getLineChartOptions(expenses);
+    this.stackedBarChartOptions = this.getStackedBarChartOptions(expenses);
+    this.movingAverageLineOptions = this.getMovingAverageLineOptions(expenses);
+    this.heatmapOptions = this.getHeatmapOptions(expenses);
+    this.calculateSummary(expenses); // Pass filtered expenses to calculate summary
   }
 
   // Sanitize username for Firebase key (replace . with _)
@@ -257,10 +308,10 @@ export class VisualizeExpenseComponent implements OnInit {
     }));
   }
 
-  calculateSummary() {
+  calculateSummary(expenses: Expense[]) {
     const summaryMap = new Map<string, { totalAmount: number, taxAmount: number, expenseCount: number }>();
 
-    this.expenses.forEach(expense => {
+    expenses.forEach(expense => {
       const type = expense.paymentType; 
       if (!summaryMap.has(type)) {
         summaryMap.set(type, { totalAmount: 0, taxAmount: 0, expenseCount: 0 });
@@ -277,6 +328,7 @@ export class VisualizeExpenseComponent implements OnInit {
       taxAmount: data.taxAmount,
       expenseCount: data.expenseCount,
     }));
+    this.hasData = this.summaryData.length > 0;
   }
   
   getTaxPieChartOptions(expenses: Expense[]): Highcharts.Options {
