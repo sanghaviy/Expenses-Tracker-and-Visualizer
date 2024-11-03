@@ -14,6 +14,11 @@ interface Expense {
   comments: string;
 }
 
+interface Currency {
+  symbol: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-view-expenses',
   templateUrl: './view-expenses.component.html',
@@ -30,6 +35,13 @@ export class ViewExpensesComponent implements OnInit {
   totalPages: number = 0;
   selectedExpenseId: string | null = null;
   private bootstrapModal: bootstrap.Modal | null = null;
+  VALID_CURRENCIES = ['USD', 'Euro', 'GBP', 'INR'];
+  currencies: Currency[] = [
+    { symbol: '$', name: 'USD' },
+    { symbol: '€', name: 'Euro' },
+    { symbol: '£', name: 'GBP' },
+    { symbol: '₹', name: 'INR' },
+  ];
 
   constructor(private db: AngularFireDatabase, private toastr: ToastrService) {}
 
@@ -116,25 +128,40 @@ export class ViewExpensesComponent implements OnInit {
       .padStart(2, '0')}`;
   }
 
+  formatDate(dateString: any) {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`; // Change format to MM/DD/YYYY
+  }
   downloadExpenses() {
     try {
       const timestamp = this.getCurrentTimestamp();
       const headers =
-        'name,totalAmount,taxAmount,category,date,paymentType,comments';
+        'name,currency,totalAmount,taxAmount,category,date,paymentType,comments';
 
       const csvContent = [
         headers,
         ...this.expenses.map((expense) => {
-          // Assign default values if category or paymentType are not present
           const category = expense.category || 'Unassigned';
           const paymentType = expense.paymentType || 'Debit';
+          const formattedDate = this.formatDate(expense.date);
 
-          // Format the date to MM/DD/YYYY
-          const formattedDate = new Date(expense.date).toLocaleDateString(
-            'en-US'
-          );
+          // Use currency name instead of symbol
+          const currencyName = this.getCurrencyName(expense.currency); // Get the name based on the symbol
+          if (!this.VALID_CURRENCIES.includes(currencyName)) {
+            console.error(
+              `Invalid currency type: ${currencyName}. Accepted values: USD, Euro, GBP, INR.`
+            );
+            return `${expense.name},Invalid currency,${expense.totalAmount},${
+              expense.taxAmount
+            },${category},${formattedDate},${paymentType},${
+              expense.comments || ''
+            }`;
+          }
 
-          return `${expense.name},${expense.totalAmount},${
+          return `${expense.name},${currencyName},${expense.totalAmount},${
             expense.taxAmount
           },${category},${formattedDate},${paymentType},${
             expense.comments || ''
@@ -161,18 +188,34 @@ export class ViewExpensesComponent implements OnInit {
     try {
       const timestamp = this.getCurrentTimestamp();
       const headers =
-        'name\ttotalAmount\ttaxAmount\tcategory\tdate\tpaymentType\tcomments';
+        'name,currency,totalAmount,taxAmount,category,date,paymentType,comments';
 
       const csvContent = [
         headers,
-        ...this.expenses.map(
-          (expense) =>
-            `${expense.name}\t${expense.totalAmount}\t${expense.taxAmount}\t${
-              expense.category
-            }\t${expense.date}\t${expense.paymentType}\t${
+        ...this.expenses.map((expense) => {
+          const category = expense.category || 'Unassigned';
+          const paymentType = expense.paymentType || 'Debit';
+          const formattedDate = this.formatDate(expense.date);
+
+          // Use currency name instead of symbol
+          const currencyName = this.getCurrencyName(expense.currency); // Get the name based on the symbol
+          if (!this.VALID_CURRENCIES.includes(currencyName)) {
+            console.error(
+              `Invalid currency type: ${currencyName}. Accepted values: USD, Euro, GBP, INR.`
+            );
+            return `${expense.name},Invalid currency,${expense.totalAmount},${
+              expense.taxAmount
+            },${category},${formattedDate},${paymentType},${
               expense.comments || 'No comments'
-            }`
-        ),
+            }`;
+          }
+
+          return `${expense.name},${currencyName},${expense.totalAmount},${
+            expense.taxAmount
+          },${category},${formattedDate},${paymentType},${
+            expense.comments || 'No comments'
+          }`;
+        }),
       ].join('\n');
 
       const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -187,9 +230,6 @@ export class ViewExpensesComponent implements OnInit {
             text: 'Here is the expense report.',
             files: [file],
           })
-          .then(() =>
-            this.toastr.success('Expenses shared successfully!', 'Success')
-          )
           .catch((err) =>
             this.toastr.error('Failed to share expenses.', 'Error')
           );
@@ -204,6 +244,12 @@ export class ViewExpensesComponent implements OnInit {
     }
   }
 
+  // Helper method to get the currency name from the symbol
+  getCurrencyName(symbol: string): string {
+    const currency = this.currencies.find((c) => c.symbol === symbol);
+    return currency ? currency.name : 'Unknown Currency';
+  }
+
   confirmDelete(expenseId: string) {
     this.selectedExpenseId = expenseId;
     const modalElement = document.getElementById('deleteModal');
@@ -213,19 +259,19 @@ export class ViewExpensesComponent implements OnInit {
     } else {
       console.error('Modal element not found');
     }
-  }  
-  
+  }
+
   deleteConfirmed() {
     if (this.selectedExpenseId) {
       this.deleteExpense(this.selectedExpenseId);
       this.selectedExpenseId = null;
-  
+
       if (this.bootstrapModal) {
         this.bootstrapModal.hide();
       }
     }
   }
-  
+
   private sanitizeEmail(email: string): string {
     return email.replace(/\./g, '_');
   }

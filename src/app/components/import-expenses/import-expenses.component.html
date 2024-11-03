@@ -1,66 +1,65 @@
 <div class="import-expenses-container mt-2">
     <div class="scrollable-container">
-        <h3 class="mb-1">Import Expenses from CSV</h3>
+        <h3 class="mb-1">{{ 'IMPORT_EXPENSES' | translate }}</h3>
 
         <!-- Hint for CSV format -->
         <div class="csv-format-hint">
-            <p class="mb-1"><strong>Required CSV Format:</strong></p>
+            <p class="mb-1"><strong>{{ 'CSV_FORMAT_HINT' | translate }}</strong></p>
             <table class="csv-format-table">
                 <thead>
                     <tr>
-                        <th>Field</th>
-                        <th>Field Header</th>
-                        <th>Format/Requirement</th>
-                    </tr>
+                            <th>{{ 'FIELD' | translate }}</th>
+                            <th>{{ 'FIELD_HEADER' | translate }}</th>
+                            <th>{{ 'FORMAT_REQUIREMENT' | translate }}</th>
+                        </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Name</td>
+                        <td>{{ 'EXPENSE_NAME' | translate }}</td>
                         <td>name</td>
-                        <td>Required</td>
+                        <td>{{ 'NAME_REQUIRED' | translate }}</td>
                     </tr>
                     <tr>
-                        <td>Currency Type</td>
+                        <td>{{ 'CURRENCY_TYPE' | translate }}</td>
                         <td>currency</td>
-                        <td>Required. Acceptable format: USD, Euro, GBP, INR 
-                        </td>
+                        <td>{{ 'CURRENCY_REQUIRED' | translate }}. {{ 'ACCEPTABLE_FORMAT' | translate }}: USD, Euro, GBP, INR</td>
                     </tr>
                     <tr>
-                        <td>Total Amount</td>
+                        <td>{{ 'TOTAL_AMOUNT' | translate }}</td>
                         <td>totalAmount</td>
-                        <td>Required</td>
+                        <td>{{ 'AMOUNT_REQUIRED' | translate }}</td>
                     </tr>
                     <tr>
-                        <td>Tax Amount</td>
+                        <td>{{ 'TAX_AMOUNT' | translate }}</td>
                         <td>taxAmount</td>
-                        <td>Required</td>
+                        <td>{{ 'TAX_REQUIRED' | translate }}</td>
                     </tr>
                     <tr>
-                        <td>Category</td>
+                        <td>{{ 'EXPENSE_CATEGORY' | translate }}</td>
                         <td>category</td>
-                        <td>Not required. Defaults to "Unassigned"</td>
+                        <td>{{ 'NOT_REQUIRED' | translate }}. {{ 'DEFAULT_UNASSIGNED' | translate }}</td>
                     </tr>
                     <tr>
-                        <td>Date</td>
+                        <td>{{ 'EXPENSE_DATE' | translate }}</td>
                         <td>date</td>
-                        <td>Required format: MM/DD/YYYY</td>
+                        <td>{{ 'REQUIRED_FORMAT' | translate }}: MM/DD/YYYY</td>
                     </tr>
                     <tr>
-                        <td>Payment Type</td>
+                        <td>{{ 'PAYMENT_TYPE' | translate }}</td>
                         <td>paymentType</td>
-                        <td>Not required. Defaults to "Debit". Valid values: Debit, Credit, or Cash</td>
+                        <td>{{ 'NOT_REQUIRED' | translate }}. {{ 'DEFAULT_DEBIT' | translate }}. {{ 'VALID_VALUES' | translate }}: Debit, Credit, or Cash</td>
                     </tr>
                     <tr>
-                        <td>Comments</td>
+                        <td>{{ 'COMMENTS' | translate }}</td>
                         <td>comments</td>
-                        <td>Not required</td>
+                        <td>{{ 'NOT_REQUIRED' | translate }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="file-upload-container">
-            <label for="csvFile">Select CSV File:</label>
+            <label for="csvFile">{{ 'SELECT_CSV_FILE' | translate }}</label>
             <input type="file" id="csvFile" (change)="onFileChange($event)" style="color: brown;" accept=".csv" />
         </div>
 
@@ -71,14 +70,14 @@
         <table *ngIf="importedExpenses.length > 0" class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Currency</th>
-                    <th>Total Amount</th>
-                    <th>Tax Amount</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th>Payment Type</th>
-                    <th>Comments</th>
+                    <th>{{ 'EXPENSE_NAME' | translate }}</th>
+                    <th>{{ 'CURRENCY' | translate }}</th>
+                    <th>{{ 'TOTAL_AMOUNT' | translate }}</th>
+                    <th>{{ 'TAX_AMOUNT' | translate }}</th>
+                    <th>{{ 'EXPENSE_CATEGORY' | translate }}</th>
+                    <th>{{ 'EXPENSE_DATE' | translate }}</th>
+                    <th>{{ 'PAYMENT_TYPE' | translate }}</th>
+                    <th>{{ 'COMMENTS' | translate }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -97,7 +96,7 @@
 
         <!-- Save Button -->
         <button class="btn" (click)="saveImportedExpenses()" *ngIf="importedExpenses.length > 0">
-            Save Imported Expenses
+            {{ 'SAVE_IMPORTED_EXPENSES' | translate }}
         </button>
     </div>
 </div>
