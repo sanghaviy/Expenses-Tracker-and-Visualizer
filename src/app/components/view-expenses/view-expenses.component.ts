@@ -154,7 +154,52 @@ export class ViewExpensesComponent implements OnInit {
     }
   }
 
-  
+  shareExpenses() {
+    try {
+      const timestamp = this.getCurrentTimestamp();
+      const headers =
+        'name\ttotalAmount\ttaxAmount\tcategory\tdate\tpaymentType\tcomments';
+
+      const csvContent = [
+        headers,
+        ...this.expenses.map(
+          (expense) =>
+            `${expense.name}\t${expense.totalAmount}\t${expense.taxAmount}\t${
+              expense.category
+            }\t${expense.date}\t${expense.paymentType}\t${
+              expense.comments || 'No comments'
+            }`
+        ),
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const file = new File([blob], `expenses_${timestamp}.csv`, {
+        type: 'text/csv',
+      });
+
+      if (navigator.share) {
+        navigator
+          .share({
+            title: 'Expense Report',
+            text: 'Here is the expense report.',
+            files: [file],
+          })
+          .then(() =>
+            this.toastr.success('Expenses shared successfully!', 'Success')
+          )
+          .catch((err) =>
+            this.toastr.error('Failed to share expenses.', 'Error')
+          );
+      } else {
+        this.toastr.warning(
+          'Sharing is not supported in this browser.',
+          'Warning'
+        );
+      }
+    } catch (error) {
+      this.toastr.error('Failed to share expenses.', 'Error');
+    }
+  }
 
   confirmDelete(expenseId: string) {
     if (confirm('Are you sure you want to delete this expense?')) {
