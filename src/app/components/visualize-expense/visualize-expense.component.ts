@@ -26,6 +26,7 @@ interface CategoryData {
 export class VisualizeExpenseComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   pieChartOptions!: Highcharts.Options;
+  pieChartTaxOptions!: Highcharts.Options;
   barChartOptions!: Highcharts.Options;
   lineChartOptions!: Highcharts.Options;
   tableData: Expense[] = [];
@@ -34,6 +35,8 @@ export class VisualizeExpenseComponent implements OnInit {
   heatmapOptions!: Highcharts.Options;
   expenses: Expense[] = []; 
   summaryData: any[] = [];
+  totalAmount: number = 0;
+  totalTax: number = 0;
 
   constructor(private db: AngularFireDatabase) {}
 
@@ -59,6 +62,7 @@ export class VisualizeExpenseComponent implements OnInit {
 
       // Set up the chart options with fetched expenses
       this.pieChartOptions = this.getPieChartOptions(this.expenses);
+      this.pieChartTaxOptions = this.getPieChartOptions(this.expenses);
       this.barChartOptions = this.getBarChartOptions(this.expenses);
       this.lineChartOptions = this.getLineChartOptions(this.expenses);
       this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
@@ -273,6 +277,34 @@ export class VisualizeExpenseComponent implements OnInit {
       taxAmount: data.taxAmount,
       expenseCount: data.expenseCount,
     }));
-    console.log('Summary Data:', this.summaryData);
+    // Calculate total amounts for the pie chart
+    this.totalAmount = this.summaryData.reduce((sum, entry) => sum + entry.totalAmount, 0);
+    this.totalTax = this.summaryData.reduce((sum, entry) => sum + entry.taxAmount, 0);
+    
+    // Update pie chart options
+    this.pieChartTaxOptions = this.getTotalVsTaxPieChartOptions(this.totalAmount, this.totalTax);
+  }
+  
+  // Create a new method for the Total vs Tax pie chart options
+  getTotalVsTaxPieChartOptions(totalAmount: number, totalTax: number): Highcharts.Options {
+    return {
+      chart: { type: 'pie' },
+      title: { text: 'Total Amount vs Tax Amount' },
+      series: [
+        {
+          name: 'Amount',
+          type: 'pie',
+          data: [
+            { name: 'Total Amount', y: totalAmount },
+            { name: 'Tax Amount', y: totalTax }
+          ],
+          showInLegend: true,
+          dataLabels: {
+            enabled: true,
+            format: '{point.name}: {point.y:.2f}', // Format for data labels
+          }
+        },
+      ],
+    } as Highcharts.Options;
   }
 }

@@ -147,3 +147,23 @@ th {
 .styled-table tr:hover {
   background-color: #f1f1f1;
 }
+
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.chart-container, .table-container {
+  flex: 1; 
+  margin-right: 20px; 
+}
+
+.table-container {
+  margin-left: 20px; 
+}
+
+.table-heading {
+  font-weight: bold;
+  margin-top: 6px;
+}
