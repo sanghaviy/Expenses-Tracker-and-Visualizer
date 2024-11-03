@@ -1,48 +1,56 @@
 <div class="container mt-4">
-    <div class="header mb-0">
-        <h3 class="text-left expense-header">Expense Reports</h3>
-        <div class="button-container">
-            <button class="btn" routerLink="/addexpense"><i class="fa fa-plus"></i> Add Expense</button>
-            <button class="btn" routerLink="/visualize"><i class="fa fa-chart-bar"></i> Visualize</button>
-        </div>
+  <div class="header mb-0">
+    <h3 class="text-left expense-header">Expense Reports</h3>
+    <div class="button-container">
+      <button class="btn" routerLink="/addexpense"><i class="fa fa-plus"></i> Add Expense</button>
+      <button class="btn" routerLink="/visualize"><i class="fa fa-chart-bar"></i> Visualize</button>
     </div>
+  </div>
 
-    <table class="table table-bordered expense-table mt-0" *ngIf="expenses.length > 0; else noExpensesTemplate">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Total Amount</th>
-            <th>Tax Amount</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Payment Type</th>
-            <th>Comments</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let expense of paginatedExpenses">
-            <td>{{ expense.name }}</td>
-            <td>{{ expense.totalAmount | currency: 'USD' }}</td>
-            <td>{{ expense.taxAmount | currency: 'USD' }}</td>
-            <td>{{ expense.date | date: 'yyyy-MM-dd' }}</td>
-            <td>{{ expense.category }}</td>
-            <td>{{ expense.paymentType }}</td>
-            <td>{{ expense.comments || 'No comments' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    
-      <!-- Pagination Controls -->
-      <div class="pagination-controls mt-0" *ngIf="expenses.length > itemsPerPage">
-        <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-      </div>
+  <table class="table table-bordered expense-table mt-0" *ngIf="expenses.length > 0; else noExpensesTemplate">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Total Amount</th>
+        <th>Tax Amount</th>
+        <th>Date</th>
+        <th>Category</th>
+        <th>Payment Type</th>
+        <th>Comments</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of paginatedExpenses">
+        <td>{{ expense.name }}</td>
+        <td>{{ expense.totalAmount | currency: 'USD' }}</td>
+        <td>{{ expense.taxAmount | currency: 'USD' }}</td>
+        <td>{{ expense.date | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.paymentType }}</td>
+        <td>{{ expense.comments || 'No comments' }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="confirmDelete(expense.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-    <!-- Template for when there are no expenses -->
-    <ng-template #noExpensesTemplate>
-        <div class="alert alert-info text-center">
-            No expenses found for this user.
-        </div>
-    </ng-template>
+  <div class="pagination-controls mt-0" *ngIf="expenses.length > itemsPerPage">
+    <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+
+  <div class="mt-4 download-button-container">
+    <button class="btn" (click)="downloadExpenses()">
+      <i class="fa fa-solid fa-download" style="color: #ffffff;"></i> Download Expense
+    </button>
+  </div>
+
+  <ng-template #noExpensesTemplate>
+    <div class="alert alert-info text-center">
+      No expenses found for this user.
+    </div>
+  </ng-template>
 </div>
