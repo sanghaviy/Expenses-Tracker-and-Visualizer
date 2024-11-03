@@ -76,6 +76,7 @@ export class AddExpensesComponent implements OnInit {
       taxAmount: [null, [Validators.required, Validators.min(0)]],
       category: ['', Validators.required],
       date: ['', Validators.required],
+      currency: ['', Validators.required],
       paymentType: ['', Validators.required],
       comments: [''],
     });
@@ -204,6 +205,7 @@ export class AddExpensesComponent implements OnInit {
     this.expenseForm.reset();
     this.expenseForm.controls['paymentType'].setValue('')
     this.expenseForm.controls['category'].setValue('')
+    this.expenseForm.controls['currency'].setValue('')
     this.newCategory = '';
     this.categories = [
       'Groceries',

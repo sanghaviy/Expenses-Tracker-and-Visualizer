@@ -29,6 +29,7 @@ export class ViewExpensesComponent implements OnInit {
   paginatedExpenses: any[] = [];
   totalPages: number = 0;
   selectedExpenseId: string | null = null;
+  private bootstrapModal: bootstrap.Modal | null = null;
 
   constructor(private db: AngularFireDatabase, private toastr: ToastrService) {}
 
@@ -207,8 +208,8 @@ export class ViewExpensesComponent implements OnInit {
     this.selectedExpenseId = expenseId;
     const modalElement = document.getElementById('deleteModal');
     if (modalElement) {
-      const bootstrapModal = new bootstrap.Modal(modalElement);
-      bootstrapModal.show();
+      this.bootstrapModal = new bootstrap.Modal(modalElement);
+      this.bootstrapModal.show();
     } else {
       console.error('Modal element not found');
     }
@@ -218,8 +219,13 @@ export class ViewExpensesComponent implements OnInit {
     if (this.selectedExpenseId) {
       this.deleteExpense(this.selectedExpenseId);
       this.selectedExpenseId = null;
+  
+      if (this.bootstrapModal) {
+        this.bootstrapModal.hide();
+      }
     }
   }
+  
   private sanitizeEmail(email: string): string {
     return email.replace(/\./g, '_');
   }

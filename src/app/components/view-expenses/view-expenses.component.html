@@ -11,6 +11,7 @@
     <thead>
       <tr>
         <th>Name</th>
+        <th>Currency</th>
         <th>Total Amount</th>
         <th>Tax Amount</th>
         <th>Date</th>
@@ -23,8 +24,9 @@
     <tbody>
       <tr *ngFor="let expense of paginatedExpenses">
         <td>{{ expense.name }}</td>
-        <td>{{ expense.totalAmount | currency: 'USD' }}</td>
-        <td>{{ expense.taxAmount | currency: 'USD' }}</td>
+        <td>{{ expense.currency }}</td>
+        <td>{{ expense.totalAmount }}</td>
+        <td>{{ expense.taxAmount }}</td>
         <td>{{ expense.date | date: 'yyyy-MM-dd' }}</td>
         <td>{{ expense.category }}</td>
         <td>{{ expense.paymentType }}</td>

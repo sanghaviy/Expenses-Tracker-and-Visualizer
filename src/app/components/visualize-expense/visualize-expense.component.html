@@ -21,10 +21,10 @@
         <option value="year">Current Year</option>
       </select>
     </div>
-
-    <div *ngIf="hasData" class="summary-and-trends-container">
+    
+    <div class="summary-and-trends-container">
       <div class="summary-charts mt-5">
-        <div class="chart-container z">
+        <div class="chart-container">
           <highcharts-chart [Highcharts]="Highcharts" [options]="barChartOptions"
             style="width: 100%; height: 300px; display: block;"></highcharts-chart>
         </div>
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div *ngIf="hasData" class="summary-charts mt-5">
+    <div class="summary-charts mt-5">
       <div class="chart-container">
         <highcharts-chart [Highcharts]="Highcharts" [options]="stackedBarChartOptions"
           style="width: 100%; height: 300px; display: block;"></highcharts-chart>
@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <div *ngIf="hasData" class="side-by-side mt-5">
+    <div class="side-by-side mt-5">
       <div class="chart-container">
         <highcharts-chart [Highcharts]="Highcharts" [options]="taxPieChartOptions"
           style="width: 100%; height: 300px; display: block;"></highcharts-chart>
@@ -79,8 +79,5 @@
       </div>
     </div>
     
-    <div *ngIf="!hasData" class="mt-4">
-      <p>No expense data available for the selected time period.</p>
-    </div>
   </div>
 </div>

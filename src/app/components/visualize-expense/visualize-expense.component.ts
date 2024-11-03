@@ -11,6 +11,7 @@ interface Expense {
   date: string;
   paymentType: string;
   comments: string;
+  currency: string;
 }
 
 interface CategoryData {
@@ -39,6 +40,14 @@ export class VisualizeExpenseComponent implements OnInit {
   totalTax: number = 0;
   hasData: boolean = false;
 
+  // Currency conversion rates (for example purposes)
+  private conversionRates: { [key: string]: number } = {
+    '€': 1.06, // Example rate: 1 EUR = 1.1 USD
+    '₹': 0.012, // Example rate: 1 INR = 0.012 USD
+    '£': 1.26, // Example rate: 1 GBP = 1.3 USD
+    '$': 1
+  };
+
   constructor(private db: AngularFireDatabase) {}
 
   ngOnInit() {
@@ -60,9 +69,21 @@ export class VisualizeExpenseComponent implements OnInit {
       console.log('Fetched expenses:', expenses);
       this.expenses = expenses; 
       this.tableData = this.expenses; 
+      this.convertExpensesToUSD(this.expenses);
 
       this.updateCharts(this.expenses);
       
+    });
+  }
+
+  convertExpensesToUSD(expenses: Expense[]) {
+    debugger
+    expenses.forEach(expense => {
+      if (this.conversionRates[expense.currency]) {
+        const conversionRate = this.conversionRates[expense.currency];
+        expense.totalAmount *= conversionRate; // Convert totalAmount to USD
+        expense.taxAmount *= conversionRate; // Convert taxAmount to USD
+      }
     });
   }
 
@@ -82,7 +103,7 @@ export class VisualizeExpenseComponent implements OnInit {
         filteredExpenses = this.expenses.filter(expense => {
           const expenseDate = new Date(expense.date);
           const localExpenseDate = new Date(expenseDate.getTime() - (expenseDate.getTimezoneOffset() * 60000));
-          const expenseDateString = localExpenseDate;
+          
           console.log("Expense Date:", expense.date); 
           return expense.date === todayString; 
         });
@@ -156,7 +177,7 @@ export class VisualizeExpenseComponent implements OnInit {
       chart: { type: 'column' },
       title: { text: 'Expense Summary' },
       xAxis: { categories: categories },
-      yAxis: { title: { text: 'Total Spending Amount' } },
+      yAxis: { title: { text: 'Total Spending Amount (USD)' } },
       series: [
         {
           name: 'Amount',
@@ -176,7 +197,7 @@ export class VisualizeExpenseComponent implements OnInit {
       chart: { type: 'line' },
       title: { text: 'Expense Trend' },
       xAxis: { categories: categories },
-      yAxis: { title: { text: 'Total Amount' } },
+      yAxis: { title: { text: 'Total Amount (USD)' } },
       series: [
         {
           name: 'Expenses',
@@ -214,7 +235,7 @@ export class VisualizeExpenseComponent implements OnInit {
       chart: { type: 'column' },
       title: { text: 'Expenses by Category' },
       xAxis: { categories: categories },
-      yAxis: { title: { text: 'Total Amount' } },
+      yAxis: { title: { text: 'Total Amount (USD)' } },
       series: series,
     } as Highcharts.Options;
   }
@@ -225,9 +246,9 @@ export class VisualizeExpenseComponent implements OnInit {
 
     return {
       chart: { type: 'line' },
-      title: { text: 'Expense Trend with Moving Average' },
-      xAxis: { categories: expenses.map(expense => expense.date) },
-      yAxis: { title: { text: 'Total Amount' } },
+      title: { text: 'Moving Average of Expenses' },
+      xAxis: { categories: expenses.map(exp => exp.date) },
+      yAxis: { title: { text: 'Total Amount (USD)' } },
       series: [
         {
           name: 'Expenses',
@@ -360,5 +381,4 @@ export class VisualizeExpenseComponent implements OnInit {
       y: totalTax,
     }));
   }
-
 }

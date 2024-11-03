@@ -6,12 +6,18 @@ import { ToastrService } from 'ngx-toastr';
 
 interface Expense {
   name: string;
+  currency: string;
   totalAmount: number;
   taxAmount: number;
   category: string;
   date: string;
   paymentType: string;
   comments: string;
+}
+
+interface Currency {
+  symbol: string;
+  name: string;
 }
 
 @Component({
@@ -23,6 +29,13 @@ export class ImportExpensesComponent {
   importedExpenses: Expense[] = [];
   csvFileName: string = '';
   errorMessage: string = '';
+
+  currencies: Currency[] = [
+    { symbol: '$', name: 'USD' },
+    { symbol: '€', name: 'Euro' },
+    { symbol: '£', name: 'GBP' },
+    { symbol: '₹', name: 'INR' },
+  ];
 
   constructor(private router: Router, private db: AngularFireDatabase, private toastr: ToastrService) {}
 
@@ -62,6 +75,7 @@ export class ImportExpensesComponent {
     this.importedExpenses = parsedData.map(expense => {
       return {
         name: expense.name,
+        currency: this.getCurrencySymbol(expense.currency) || '$', // Use the mapping function here
         totalAmount: +expense.totalAmount,
         taxAmount: +expense.taxAmount,
         category: expense.category || 'Unassigned',
@@ -70,6 +84,12 @@ export class ImportExpensesComponent {
         comments: expense.comments || 'No comments'
       };
     });
+  }
+
+  // New method to get currency symbol
+  getCurrencySymbol(currencyName: string): string | undefined {
+    const currency = this.currencies.find(c => c.name.toLowerCase() === currencyName.toLowerCase());
+    return currency ? currency.symbol : undefined;
   }
 
   convertDate(dateStr: string): string {
@@ -91,7 +111,6 @@ export class ImportExpensesComponent {
       const userExpensesRef = this.db.list<Expense>(`expenses/${sanitizedEmail}`);
       const fileKey = `${sanitizedEmail}_${this.csvFileName}`;
       userExpensesRef.query.ref.once('value').then(snapshot => {
-        debugger
         if (localStorage.getItem(fileKey) && snapshot.exists()) {
           this.toastr.error('You have already uploaded expenses. Please check your existing expenses.', 'Error');
           return;

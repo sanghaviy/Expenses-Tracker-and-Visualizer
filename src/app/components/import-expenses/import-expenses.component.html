@@ -20,6 +20,12 @@
                         <td>Required</td>
                     </tr>
                     <tr>
+                        <td>Currency Type</td>
+                        <td>currency</td>
+                        <td>Required. Acceptable format: USD, Euro, GBP, INR 
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Total Amount</td>
                         <td>totalAmount</td>
                         <td>Required</td>
@@ -66,6 +72,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Currency</th>
                     <th>Total Amount</th>
                     <th>Tax Amount</th>
                     <th>Category</th>
@@ -77,6 +84,7 @@
             <tbody>
                 <tr *ngFor="let expense of importedExpenses">
                     <td>{{ expense.name }}</td>
+                    <td>{{ expense.currency }}</td>
                     <td>{{ expense.totalAmount }}</td>
                     <td>{{ expense.taxAmount }}</td>
                     <td>{{ expense.category }}</td>
