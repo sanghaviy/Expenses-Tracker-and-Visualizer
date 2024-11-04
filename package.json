@@ -24,6 +24,7 @@
     "@types/node": "^22.7.4",
     "angular-font-awesome": "^3.1.2",
     "bootstrap": "^5.3.3",
+    "emailjs-com": "^3.2.0",
     "firebase": "^9.6.1",
     "font-awesome": "^4.7.0",
     "highcharts": "^11.4.8",

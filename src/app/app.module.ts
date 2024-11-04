@@ -27,7 +27,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { environment } from 'src/environments/environment';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
+import { PaymentReminderComponent } from './components/payment-reminder/payment-reminder.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -44,7 +44,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AddExpensesComponent,
     ViewExpensesComponent,
     VisualizeExpenseComponent,
-    ImportExpensesComponent
+    ImportExpensesComponent,
+    PaymentReminderComponent
   ],
   imports: [
     BrowserModule,
