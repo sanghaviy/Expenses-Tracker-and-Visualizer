@@ -1,12 +1,12 @@
 <br>
-<h2 class="text-left font-weight-bold text headertxt mx-2">Welcome {{ this.userDetails?.firstName }} !!</h2>
+<h2 class="text-left font-weight-bold text headertxt mx-4">{{ 'WELCOME' | translate }} {{ this.userDetails?.firstName }} !!</h2>
 
 <div class="container-class-1" *ngIf="showNoExpenses; else expensesList">
     <img class="class-2" src="../../../assets/images/TasksList.png" alt="Tasks">
     <div class="class-3 d-flex flex-column">
-        <h1>No Expenses Data</h1>
-        <p>Please enter an expense !!</p>
-        <input type="submit" value="+ Add Expense" class="btn btn-block btn-primary textBg border-0" (click)="AddExpenses()">
+        <h1>{{ 'NO_EXPENSES' | translate }}</h1>
+        <p>{{ 'ADD_EXPENSE' | translate }}</p>
+        <input type="submit" value="+ {{ 'ADD_EXPENSES' | translate | titlecase }}" class="btn btn-block btn-primary textBg border-0" (click)="AddExpenses()">
     </div>
 </div>
 

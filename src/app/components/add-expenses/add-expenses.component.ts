@@ -76,6 +76,7 @@ export class AddExpensesComponent implements OnInit {
       taxAmount: [null, [Validators.required, Validators.min(0)]],
       category: ['', Validators.required],
       date: ['', Validators.required],
+      currency: ['', Validators.required],
       paymentType: ['', Validators.required],
       comments: [''],
     });
@@ -138,13 +139,6 @@ export class AddExpensesComponent implements OnInit {
 
   saveCategories() {
     const uniqueCategories = Array.from(new Set(this.categories)); // Ensure unique categories
-    // localStorage.setItem(
-    //   `categories_${this.loggedInUser.username}`,
-    //   JSON.stringify(uniqueCategories)
-    // );
-    // this.toastr.success('Categories updated in local storage!', 'Success');
-    
-    // Now save to Firebase
     this.saveCategoriesToFirebase(uniqueCategories);
   }
 
@@ -211,6 +205,7 @@ export class AddExpensesComponent implements OnInit {
     this.expenseForm.reset();
     this.expenseForm.controls['paymentType'].setValue('')
     this.expenseForm.controls['category'].setValue('')
+    this.expenseForm.controls['currency'].setValue('')
     this.newCategory = '';
     this.categories = [
       'Groceries',

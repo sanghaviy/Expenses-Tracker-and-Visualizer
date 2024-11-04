@@ -1,0 +1,29 @@
+<div class="payment-reminder-container mt-4">
+  <h1>Payment Reminders</h1>
+  <div class="payment-layout">
+    <div class="payment-inputs">
+      <label for="paymentType">Payment Type</label>
+      <input type="text" id="paymentType" [(ngModel)]="paymentType" placeholder="Enter payment type" />
+
+      <label for="amount">Amount</label>
+      <input type="number" id="amount" [(ngModel)]="amount" placeholder="Enter amount" />
+
+      <label for="dueDate">Due Date</label>
+      <input type="date" id="dueDate" [(ngModel)]="dueDate" placeholder="dd-mm-yyyy" />
+
+      <button (click)="addReminder()">Add Reminder</button>
+    </div>
+
+    <div class="added-reminders-section">
+      <h2>Added Reminders</h2>
+      <div class="reminders-container">
+        <div *ngFor="let reminder of reminders" class="reminder">
+          <h4>Type: <strong>{{ reminder.type }}</strong></h4>
+          <p>Amount: <strong>{{ reminder.amount }}</strong></p>
+          <p>Due Date: <strong>{{ reminder.dueDate | date: 'yyyy-MM-dd' }}</strong></p>
+          <button (click)="sendEmail(reminder)">Send</button> <!-- Send button -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

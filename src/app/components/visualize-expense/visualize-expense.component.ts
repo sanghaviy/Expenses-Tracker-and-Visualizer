@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import * as Highcharts from 'highcharts';
-import { Observable } from 'rxjs';
 
 interface Expense {
   name: string;
@@ -11,6 +10,7 @@ interface Expense {
   date: string;
   paymentType: string;
   comments: string;
+  currency: string;
 }
 
 interface CategoryData {
@@ -26,6 +26,7 @@ interface CategoryData {
 export class VisualizeExpenseComponent implements OnInit {
   Highcharts: typeof Highcharts = Highcharts;
   pieChartOptions!: Highcharts.Options;
+  taxPieChartOptions!: Highcharts.Options;
   barChartOptions!: Highcharts.Options;
   lineChartOptions!: Highcharts.Options;
   tableData: Expense[] = [];
@@ -34,6 +35,18 @@ export class VisualizeExpenseComponent implements OnInit {
   heatmapOptions!: Highcharts.Options;
   expenses: Expense[] = []; 
   summaryData: any[] = [];
+  totalAmount: number = 0;
+  totalTax: number = 0;
+  hasData: boolean = false;
+  filteredExpenses: Expense[] = [];
+
+  // Currency conversion rates (for example purposes)
+  private conversionRates: { [key: string]: number } = {
+    '€': 1.06, // Example rate: 1 EUR = 1.1 USD
+    '₹': 0.012, // Example rate: 1 INR = 0.012 USD
+    '£': 1.26, // Example rate: 1 GBP = 1.3 USD
+    '$': 1
+  };
 
   constructor(private db: AngularFireDatabase) {}
 
@@ -55,17 +68,75 @@ export class VisualizeExpenseComponent implements OnInit {
     expensesRef.valueChanges().subscribe((expenses) => {
       console.log('Fetched expenses:', expenses);
       this.expenses = expenses; 
+      this.filteredExpenses = this.expenses.map(x => x);
       this.tableData = this.expenses; 
+      this.convertExpensesToUSD(this.expenses);
 
-      // Set up the chart options with fetched expenses
-      this.pieChartOptions = this.getPieChartOptions(this.expenses);
-      this.barChartOptions = this.getBarChartOptions(this.expenses);
-      this.lineChartOptions = this.getLineChartOptions(this.expenses);
-      this.stackedBarChartOptions = this.getStackedBarChartOptions(this.expenses);
-      this.movingAverageLineOptions = this.getMovingAverageLineOptions(this.expenses);
-      this.heatmapOptions = this.getHeatmapOptions(this.expenses);
-      this.calculateSummary();
+      this.updateCharts(this.expenses);
+      
     });
+  }
+
+  convertExpensesToUSD(expenses: Expense[]) {
+    debugger
+    expenses.forEach(expense => {
+      if (this.conversionRates[expense.currency]) {
+        const conversionRate = this.conversionRates[expense.currency];
+        expense.totalAmount *= conversionRate; // Convert totalAmount to USD
+        expense.taxAmount *= conversionRate; // Convert taxAmount to USD
+      }
+    });
+  }
+
+  onTimePeriodChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const period = target.value;
+    this.filteredExpenses = [];
+    const today = new Date();
+    const todayString = today.toLocaleDateString('en-CA');
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toLocaleDateString('en-CA');
+    const startOfYear = new Date(today.getFullYear(), 0, 1).toLocaleDateString('en-CA');
+  
+    switch (period) {
+      case 'today':
+        this.filteredExpenses = this.expenses.filter(expense => {
+          return expense.date === todayString; 
+        });
+        break;
+  
+      case 'month':
+        this.filteredExpenses = this.expenses.filter(expense => {
+          const expenseDate = new Date(expense.date).toLocaleDateString('en-CA');
+          return expenseDate >= startOfMonth;
+        });
+        break;
+  
+      case 'year':
+        this.filteredExpenses = this.expenses.filter(expense => {
+          const expenseDate = new Date(expense.date).toLocaleDateString('en-CA');
+          return expenseDate >= startOfYear;
+        });
+        break;
+  
+      case 'total':
+      default:
+        this.filteredExpenses = this.expenses; 
+        break;
+    }
+  
+    this.updateCharts(this.filteredExpenses);
+  }
+
+  // Method to update all charts based on expenses
+  updateCharts(expenses: Expense[]) {
+    this.pieChartOptions = this.getPieChartOptions(expenses);
+    this.taxPieChartOptions = this.getTaxPieChartOptions(expenses);
+    this.barChartOptions = this.getBarChartOptions(expenses);
+    this.lineChartOptions = this.getLineChartOptions(expenses);
+    this.stackedBarChartOptions = this.getStackedBarChartOptions(expenses);
+    this.movingAverageLineOptions = this.getMovingAverageLineOptions(expenses);
+    this.heatmapOptions = this.getHeatmapOptions(expenses);
+    this.calculateSummary(expenses); // Pass filtered expenses to calculate summary
   }
 
   // Sanitize username for Firebase key (replace . with _)
@@ -99,9 +170,9 @@ export class VisualizeExpenseComponent implements OnInit {
 
     return {
       chart: { type: 'column' },
-      title: { text: 'Monthly Summary' },
+      title: { text: 'Expense Summary' },
       xAxis: { categories: categories },
-      yAxis: { title: { text: 'Total Spending Amount' } },
+      yAxis: { title: { text: 'Total Spending Amount (USD)' } },
       series: [
         {
           name: 'Amount',
@@ -121,7 +192,7 @@ export class VisualizeExpenseComponent implements OnInit {
       chart: { type: 'line' },
       title: { text: 'Expense Trend' },
       xAxis: { categories: categories },
-      yAxis: { title: { text: 'Total Amount' } },
+      yAxis: { title: { text: 'Total Amount (USD)' } },
       series: [
         {
           name: 'Expenses',
@@ -157,9 +228,9 @@ export class VisualizeExpenseComponent implements OnInit {
 
     return {
       chart: { type: 'column' },
-      title: { text: 'Stacked Monthly Expenses by Category' },
+      title: { text: 'Expenses by Category' },
       xAxis: { categories: categories },
-      yAxis: { title: { text: 'Total Amount' } },
+      yAxis: { title: { text: 'Total Amount (USD)' } },
       series: series,
     } as Highcharts.Options;
   }
@@ -170,9 +241,9 @@ export class VisualizeExpenseComponent implements OnInit {
 
     return {
       chart: { type: 'line' },
-      title: { text: 'Expense Trend with Moving Average' },
-      xAxis: { categories: expenses.map(expense => expense.date) },
-      yAxis: { title: { text: 'Total Amount' } },
+      title: { text: 'Moving Average of Expenses' },
+      xAxis: { categories: expenses.map(exp => exp.date) },
+      yAxis: { title: { text: 'Total Amount (USD)' } },
       series: [
         {
           name: 'Expenses',
@@ -253,10 +324,10 @@ export class VisualizeExpenseComponent implements OnInit {
     }));
   }
 
-  calculateSummary() {
+  calculateSummary(expenses: Expense[]) {
     const summaryMap = new Map<string, { totalAmount: number, taxAmount: number, expenseCount: number }>();
 
-    this.expenses.forEach(expense => {
+    expenses.forEach(expense => {
       const type = expense.paymentType; 
       if (!summaryMap.has(type)) {
         summaryMap.set(type, { totalAmount: 0, taxAmount: 0, expenseCount: 0 });
@@ -273,6 +344,36 @@ export class VisualizeExpenseComponent implements OnInit {
       taxAmount: data.taxAmount,
       expenseCount: data.expenseCount,
     }));
-    console.log('Summary Data:', this.summaryData);
+    this.hasData = this.summaryData.length > 0;
+  }
+  
+  getTaxPieChartOptions(expenses: Expense[]): Highcharts.Options {
+    const taxData: CategoryData[] = this.getTaxData(expenses); // New function for tax data
+    return {
+      chart: { type: 'pie' },
+      title: { text: 'Tax Spending by Category' },
+      series: [
+        {
+          name: 'Tax Spending',
+          type: 'pie',
+          data: taxData.map(item => ({ name: item.name, y: item.y })),
+        },
+      ],
+    } as Highcharts.Options;
+  }
+
+  getTaxData(expenses: Expense[]): CategoryData[] {
+    const taxMap = expenses.reduce((acc: { [key: string]: number }, expense: Expense) => {
+      if (!acc[expense.category]) {
+        acc[expense.category] = 0;
+      }
+      acc[expense.category] += expense.taxAmount; // Sum taxAmount by category
+      return acc;
+    }, {});
+
+    return Object.entries(taxMap).map(([name, totalTax]) => ({
+      name,
+      y: totalTax,
+    }));
   }
 }

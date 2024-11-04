@@ -68,7 +68,6 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  overflow-x: auto;
   margin-bottom: 20px;
 }
 
@@ -146,4 +145,71 @@ th {
 
 .styled-table tr:hover {
   background-color: #f1f1f1;
+}
+
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.chart-container, .table-container {
+  flex: 1; 
+  margin-right: 20px; 
+}
+
+.table-container {
+  margin-left: 20px; 
+}
+
+.table-heading {
+  font-weight: bold;
+  margin-top: 6px;
+}
+.scrollable-container {
+  max-height: 72vh;
+  overflow-y: auto;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.dropdown-container label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.dropdown-container select {
+  padding: 10px;
+  border: 2px solid #FF810C; /* Make border more pronounced */
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  background-color: #fff; /* White background for contrast */
+  color: #333; /* Dark text color for visibility */
+  cursor: pointer;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.dropdown-container select:focus {
+  border-color: #FF5A00; /* Darker border on focus */
+  outline: none;
+  background-color: #f8f8f8; /* Light grey background on focus */
+}
+
+.dropdown-container select:hover {
+  background-color: #f5f5f5; /* Slightly darker background on hover */
 }
