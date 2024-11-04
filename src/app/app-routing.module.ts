@@ -8,6 +8,7 @@ import { ViewExpensesComponent } from './components/view-expenses/view-expenses.
 import { VisualizeExpenseComponent } from './components/visualize-expense/visualize-expense.component';
 import { ImportExpensesComponent } from './components/import-expenses/import-expenses.component';
 import { PaymentReminderComponent } from './components/payment-reminder/payment-reminder.component';
+import { FinancialAdviceComponent } from './components/financial-advice/financial-advice.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'view-expenses', component: ViewExpensesComponent },
   { path: 'visualize', component: VisualizeExpenseComponent },
   { path: 'remainders', component: PaymentReminderComponent },
+  { path: 'advices', component: FinancialAdviceComponent },
   { path: 'import-expenses', component: ImportExpensesComponent },
   { path: '**', redirectTo: '/login' },
 ];
