@@ -30,7 +30,7 @@ export class ViewExpensesComponent implements OnInit {
 
   // Pagination properties
   currentPage: number = 1;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 6;
   paginatedExpenses: any[] = [];
   totalPages: number = 0;
   selectedExpenseId: string | null = null;

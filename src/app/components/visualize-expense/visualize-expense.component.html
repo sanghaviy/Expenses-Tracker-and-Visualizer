@@ -22,62 +22,70 @@
       </select>
     </div>
     
-    <div class="summary-and-trends-container">
+    <div *ngIf="(filteredExpenses.length > 0 ); else noExpensesTemplate">
+      <div class="summary-and-trends-container">
+        <div class="summary-charts mt-5">
+          <div class="chart-container">
+            <highcharts-chart [Highcharts]="Highcharts" [options]="barChartOptions"
+              style="width: 100%; height: 300px; display: block;"></highcharts-chart>
+          </div>
+          <div class="chart-container">
+            <highcharts-chart [Highcharts]="Highcharts" [options]="pieChartOptions"
+              style="width: 100%; height: 300px; display: block;"></highcharts-chart>
+          </div>
+        </div>
+  
+        <div class="trends-container">
+          <highcharts-chart [Highcharts]="Highcharts" [options]="lineChartOptions"
+            style="width: 100%; height: 300px; display: block;"></highcharts-chart>
+        </div>
+      </div>
+  
       <div class="summary-charts mt-5">
         <div class="chart-container">
-          <highcharts-chart [Highcharts]="Highcharts" [options]="barChartOptions"
+          <highcharts-chart [Highcharts]="Highcharts" [options]="stackedBarChartOptions"
             style="width: 100%; height: 300px; display: block;"></highcharts-chart>
         </div>
         <div class="chart-container">
-          <highcharts-chart [Highcharts]="Highcharts" [options]="pieChartOptions"
+          <highcharts-chart [Highcharts]="Highcharts" [options]="movingAverageLineOptions"
             style="width: 100%; height: 300px; display: block;"></highcharts-chart>
         </div>
       </div>
-
-      <div class="trends-container">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="lineChartOptions"
-          style="width: 100%; height: 300px; display: block;"></highcharts-chart>
+  
+      <div class="side-by-side mt-5">
+        <div class="chart-container">
+          <highcharts-chart [Highcharts]="Highcharts" [options]="taxPieChartOptions"
+            style="width: 100%; height: 300px; display: block;"></highcharts-chart>
+        </div>
+        <div class="table-container">
+          <h5 class="table-heading">Expense Summary By Expense Type</h5>
+          <table class="styled-table mt-0 mx-0">
+            <thead>
+              <tr>
+                <th>Expense Type</th>
+                <th>Total Amount</th>
+                <th>Tax Amount</th>
+                <th>No. of Expenses Recorded</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let summary of summaryData">
+                <td>{{ summary.expenseType }}</td>
+                <td>{{ summary.totalAmount | currency }}</td>
+                <td>{{ summary.taxAmount | currency }}</td>
+                <td>{{ summary.expenseCount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <div class="summary-charts mt-5">
-      <div class="chart-container">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="stackedBarChartOptions"
-          style="width: 100%; height: 300px; display: block;"></highcharts-chart>
+    <ng-template #noExpensesTemplate>
+      <div class="alert alert-info text-center">
+        No expenses found to visualize.
       </div>
-      <div class="chart-container">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="movingAverageLineOptions"
-          style="width: 100%; height: 300px; display: block;"></highcharts-chart>
-      </div>
-    </div>
-
-    <div class="side-by-side mt-5">
-      <div class="chart-container">
-        <highcharts-chart [Highcharts]="Highcharts" [options]="taxPieChartOptions"
-          style="width: 100%; height: 300px; display: block;"></highcharts-chart>
-      </div>
-      <div class="table-container">
-        <h5 class="table-heading">Expense Summary By Expense Type</h5>
-        <table class="styled-table mt-0 mx-0">
-          <thead>
-            <tr>
-              <th>Expense Type</th>
-              <th>Total Amount</th>
-              <th>Tax Amount</th>
-              <th>No. of Expenses Recorded</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let summary of summaryData">
-              <td>{{ summary.expenseType }}</td>
-              <td>{{ summary.totalAmount | currency }}</td>
-              <td>{{ summary.taxAmount | currency }}</td>
-              <td>{{ summary.expenseCount }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </ng-template>
     
   </div>
 </div>

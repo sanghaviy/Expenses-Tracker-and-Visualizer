@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/compat/database';
 import * as Highcharts from 'highcharts';
-import { Observable } from 'rxjs';
 
 interface Expense {
   name: string;
@@ -39,6 +38,7 @@ export class VisualizeExpenseComponent implements OnInit {
   totalAmount: number = 0;
   totalTax: number = 0;
   hasData: boolean = false;
+  filteredExpenses: Expense[] = [];
 
   // Currency conversion rates (for example purposes)
   private conversionRates: { [key: string]: number } = {
@@ -68,6 +68,7 @@ export class VisualizeExpenseComponent implements OnInit {
     expensesRef.valueChanges().subscribe((expenses) => {
       console.log('Fetched expenses:', expenses);
       this.expenses = expenses; 
+      this.filteredExpenses = this.expenses.map(x => x);
       this.tableData = this.expenses; 
       this.convertExpensesToUSD(this.expenses);
 
@@ -90,34 +91,28 @@ export class VisualizeExpenseComponent implements OnInit {
   onTimePeriodChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     const period = target.value;
-    let filteredExpenses: Expense[] = [];
+    this.filteredExpenses = [];
     const today = new Date();
     const todayString = today.toLocaleDateString('en-CA');
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toLocaleDateString('en-CA');
     const startOfYear = new Date(today.getFullYear(), 0, 1).toLocaleDateString('en-CA');
   
-    console.log("Today String:", todayString); 
-  
     switch (period) {
       case 'today':
-        filteredExpenses = this.expenses.filter(expense => {
-          const expenseDate = new Date(expense.date);
-          const localExpenseDate = new Date(expenseDate.getTime() - (expenseDate.getTimezoneOffset() * 60000));
-          
-          console.log("Expense Date:", expense.date); 
+        this.filteredExpenses = this.expenses.filter(expense => {
           return expense.date === todayString; 
         });
         break;
   
       case 'month':
-        filteredExpenses = this.expenses.filter(expense => {
+        this.filteredExpenses = this.expenses.filter(expense => {
           const expenseDate = new Date(expense.date).toLocaleDateString('en-CA');
           return expenseDate >= startOfMonth;
         });
         break;
   
       case 'year':
-        filteredExpenses = this.expenses.filter(expense => {
+        this.filteredExpenses = this.expenses.filter(expense => {
           const expenseDate = new Date(expense.date).toLocaleDateString('en-CA');
           return expenseDate >= startOfYear;
         });
@@ -125,11 +120,11 @@ export class VisualizeExpenseComponent implements OnInit {
   
       case 'total':
       default:
-        filteredExpenses = this.expenses; 
+        this.filteredExpenses = this.expenses; 
         break;
     }
   
-    this.updateCharts(filteredExpenses);
+    this.updateCharts(this.filteredExpenses);
   }
 
   // Method to update all charts based on expenses
