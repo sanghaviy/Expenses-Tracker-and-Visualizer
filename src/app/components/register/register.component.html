@@ -7,9 +7,21 @@
                 <div class="container">
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-8" style="position: relative; margin-left: 140px;">
-                            <h1 class="text-left font-weight-bold text headertxt"></h1>
+                            <h1 class="text-left font-weight-bold text headertxt" style="color: rgb(0, 51, 102); background-color: rgb(255, 255, 255);">
+                                Student Expense 
+                                <span 
+                                  style="cursor: pointer; color: rgb(0, 51, 102);" 
+                                  routerLink="/dashboard" 
+                                  tabindex="0" 
+                                  aria-label="Go to Dashboard"
+                                >
+                                  Tracker
+                                </span>
+                              </h1>
                             <br>
-                            <h4 class="text-left font-weight-bold mb-4 text" style="width: 400px;">Register Now!</h4>
+                            <h4 class="text-left font-weight-bold mb-4 text" style="width: 400px; color: rgb(0, 51, 102); background-color: rgb(255, 255, 255);">
+                                Register Now!
+                              </h4>                              
                             <form [formGroup]="signUpForm">
                                 <div class="form-group first">
                                     <label for="firstName" style="font-weight: 400;">First Name</label>
@@ -62,7 +74,14 @@
                                 <div class="d-flex mb-4 align-items-center mt-2 cursor">
                                     <span class="small text-primary cursor" routerLink="/login">Already Registered. Login?</span>
                                 </div>
-                                <input type="submit" value="Register" class="btn btn-block btn-primary textBg border-0" (click)="register()">
+                                <input 
+                                    type="submit" 
+                                    value="Register" 
+                                    class="btn btn-block btn-primary textBg border-0" 
+                                    style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none;" 
+                                    (click)="register()" 
+                              />
+                              
                             </form>
                         </div>
                     </div>

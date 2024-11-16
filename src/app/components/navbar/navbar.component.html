@@ -7,31 +7,52 @@
         
         <!-- Left elements (Logo and Search) -->
         <div class="d-flex">
-            <img style="width:36%; cursor: pointer;" src="../../../assets/images/logo.png" routerLink="/dashboard" alt="Expense Tracker System">
-            <form class="input-group w-auto my-auto d-none d-sm-flex mx-5">
+            <img style="width:36%; cursor: pointer;" src="../../../assets/images/logo.png" routerLink="/dashboard" Alt="Expense Tracker System">
+            <!-- <form class="input-group w-auto my-auto d-none d-sm-flex mx-5">
                 <input autocomplete="off" type="search" class="form-control" placeholder="Search"
                     style="min-width: 125px;" />
                 <span class="input-group-text border-0 d-none d-lg-flex cursor themebgColor text-white">
                     <i class="fa fa-search"></i>
                 </span>
-            </form>
+            </form> -->
         </div>          
 
         <ul class="navbar-nav ms-auto d-flex align-items-center">
-            <li class="nav-item dropdown ms-3">
-                <a class="nav-link dropdown-toggle text-white" id="languageDropdown" role="button" data-bs-toggle="dropdown">
-                  Language
-                </a>
+            <li class="nav-item dropdown ms-3" >
+                <a 
+                class="nav-link dropdown-toggle" 
+                id="languageDropdown" 
+                role="button" 
+                data-bs-toggle="dropdown" 
+                style="color: rgb(0, 51, 102); padding: 10px; border-radius: 5px;"
+              >
+                Language
+              </a>
+              
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" (click)="changeLanguage('en')">English</a></li>
                   <li><a class="dropdown-item" (click)="changeLanguage('es')">Spanish</a></li>
                 </ul>
               </li>
             <li class="nav-item dropdown profile-container ms-3">
-                <a class="nav-link d-sm-flex align-items-sm-center">
-                    <strong class="d-none d-sm-block ms-1 text-white">{{userName}}</strong>
-                    <img src="../../../assets/images/profile_picture.png" class="rounded-circle" height="35" alt="" />
-                </a>
+                <a 
+  class="nav-link d-sm-flex align-items-sm-center" 
+  
+>
+  <strong 
+    class="d-none d-sm-block ms-1" 
+    style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px;"
+  >
+    {{userName}}
+  </strong>
+  <img 
+    src="../../../assets/images/profile_picture.png" 
+    class="rounded-circle" 
+    height="35" 
+    Alt="Profile Picture" 
+  />
+</a>
+
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
                         <a class="dropdown-item" routerLink="/profile-options/profile">Profile</a>
