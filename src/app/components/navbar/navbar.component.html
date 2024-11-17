@@ -1,7 +1,7 @@
 <!-- Topbar Navbar -->
 <nav class="navbar navbar-expand navbar-light textBg topbar mb-4 static-top shadow"  style="max-height: 11vh;">
     <div class="sidebar-brand-icon-a" (click)="toggleMenu()">
-        <i class="fa-solid fa-bars fa-xl mx-3" style="color: #ffffff;"></i>
+        <em class="fa-solid fa-bars fa-xl mx-3" style="color: #ffffff;"></em>
     </div>
     <div class="container-fluid">
         
@@ -12,7 +12,7 @@
                 <input autocomplete="off" type="search" class="form-control" placeholder="Search"
                     style="min-width: 125px;" />
                 <span class="input-group-text border-0 d-none d-lg-flex cursor themebgColor text-white">
-                    <i class="fa fa-search"></i>
+                    <em class="fa fa-search"></em>
                 </span>
             </form> -->
         </div>          
@@ -22,7 +22,7 @@
                 <a 
                 class="nav-link dropdown-toggle" 
                 id="languageDropdown" 
-                role="button" 
+                role="button" target="_self"
                 data-bs-toggle="dropdown" 
                 style="color: rgb(0, 51, 102); padding: 10px; border-radius: 5px;"
               >
@@ -30,8 +30,8 @@
               </a>
               
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a class="dropdown-item" (click)="changeLanguage('en')">English</a></li>
-                  <li><a class="dropdown-item" (click)="changeLanguage('es')">Spanish</a></li>
+                  <li><a class="dropdown-item" (click)="changeLanguage('en')" target="_self">English</a></li>
+                  <li><a class="dropdown-item" (click)="changeLanguage('es')" target="_self">Spanish</a></li>
                 </ul>
               </li>
             <li class="nav-item dropdown profile-container ms-3">
@@ -55,16 +55,16 @@
 
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <a class="dropdown-item" routerLink="/profile-options/profile">Profile</a>
+                        <a class="dropdown-item" routerLink="/profile-options/profile" target="_self">Profile</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="/profile-options/settings">Settings</a>
+                        <a class="dropdown-item" routerLink="/profile-options/settings" target="_self">Settings</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="/profile-options/activity">Activity</a>
+                        <a class="dropdown-item" routerLink="/profile-options/activity" target="_self">Activity</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" (click)="logout()">Logout</a>
+                        <a class="dropdown-item" (click)="logout()" target="_self">Logout</a>
                     </li>
                 </ul>
             </li>

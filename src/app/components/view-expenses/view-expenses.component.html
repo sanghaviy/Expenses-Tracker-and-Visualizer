@@ -1,9 +1,9 @@
 <div class="container mt-4">
   <div class="header mb-0">
-    <h3 class="text-left expense-header" style="color: rgb(0, 51, 102); background-color: rgb(255, 255, 255);">Expense Reports</h3>
+    <h4 class="text-left expense-header" style="color: rgb(0, 51, 102);">Expense Reports</h4>
     <div class="button-container">
-      <button class="btn" routerLink="/addexpense" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><i class="fa fa-plus" ></i> Add Expense</button>
-      <button class="btn" routerLink="/visualize" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><i class="fa fa-chart-bar"></i> Visualize</button>
+      <button class="btn" routerLink="/addexpense" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><em class="fa fa-plus" ></em> Add Expense</button>
+      <button class="btn" routerLink="/visualize" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><em class="fa fa-chart-bar"></em> Visualize</button>
     </div>
   </div>
 
@@ -32,7 +32,7 @@
         <td>{{ expense.paymentType }}</td>
         <td>{{ expense.comments || 'No comments' }}</td>
         <td>
-          <i class="fa-solid fa-trash-can" (click)="confirmDelete(expense.id)" style="color: red; font-size: 18px;"></i>     
+          <em class="fa-solid fa-trash-can" (click)="confirmDelete(expense.id)" style="color: red; font-size: 18px;"></em>     
         </td>
       </tr>
     </tbody>
@@ -48,10 +48,10 @@
 
   <div class="mt-4 download-button-container" *ngIf="expenses.length > 0;">
     <button class="btn" (click)="downloadExpenses()" style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">
-      <i class="fa fa-solid fa-download" style="color: #ffffff;"></i> Download Expense
+      <em class="fa fa-solid fa-download" style="color: #ffffff;"></em> Download Expense
     </button>
     <button class="btn ml-4" (click)="shareExpenses()" style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">
-      <i class="fa fa-solid fa-share" style="color: #ffffff;"></i> Share Expense
+      <em class="fa fa-solid fa-share" style="color: #ffffff;"></em> Share Expense
     </button>
   </div>
 
