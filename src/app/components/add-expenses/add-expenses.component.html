@@ -142,9 +142,9 @@
         </div>
 
         <!-- Display Current Budget with Currency -->
-        <p class="current-budget font-weight-bold" style="font-size: 20px;color: rgb(0, 51, 102); ">
+        <h3 class="current-budget font-weight-bold" style="font-size: 20px;color: rgb(0, 51, 102); ">
             {{ 'CURRENT_BUDGET' | translate }}: {{ selectedCurrencyValue.symbol }} {{ (monthlyBudgetValue || 0).toFixed(2) }}
-        </p>
+        </h3>
 
         <!-- Display Spending Limit -->
         <p [ngClass]="{
