@@ -1,16 +1,11 @@
-<br>
-<h3 
-  class="text-left font-weight-bold text headertxt mx-4" 
-  style="color: rgb(0, 51, 102);"
->
+<h1 class="text-left font-weight-bold text headertxt mx-4" style="color: rgb(0, 51, 102);">
   {{ 'WELCOME' | translate }} {{ this.userDetails?.firstName }} !!
-</h3>
-
+</h1>
 
 <div class="container-class-1" *ngIf="showNoExpenses; else expensesList">
-    <img class="class-2" src="../../../assets/images/TasksList.png" Alt="Tasks">
+    <img class="class-2" src="../../../assets/images/TasksList.png" alt="Tasks">
     <div class="class-3 d-flex flex-column">
-        <h1 style="color: rgb(0, 51, 102);">{{ 'NO_EXPENSES' | translate }}</h1>
+        <h2 style="color: rgb(0, 51, 102);">{{ 'NO_EXPENSES' | translate }}</h2>
         <p>{{ 'ADD_EXPENSE' | translate }}</p>
         <input 
             type="submit" 
@@ -19,7 +14,6 @@
             style="background-color: rgb(0, 102, 204);" 
             (click)="AddExpenses()" 
         />
-
     </div>
 </div>
 

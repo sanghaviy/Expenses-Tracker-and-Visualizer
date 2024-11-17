@@ -15,10 +15,10 @@
     </div>
 
     <div class="added-reminders-section">
-      <h3 style="color: rgb(0, 51, 102); ">Added Reminders</h3>
+      <h2 style="color: rgb(0, 51, 102); ">Added Reminders</h2>
       <div class="reminders-container">
         <div *ngFor="let reminder of reminders" class="reminder">
-          <h4>Type: <strong>{{ reminder.type }}</strong></h4>
+          <h3>Type: <strong>{{ reminder.type }}</strong></h3>
           <p>Amount: <strong>{{ reminder.amount }}</strong></p>
           <p>Due Date: <strong>{{ reminder.dueDate | date: 'yyyy-MM-dd' }}</strong></p>
           <button (click)="sendEmail(reminder)" style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">Send</button> <!-- Send button -->

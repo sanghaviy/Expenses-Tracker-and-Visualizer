@@ -1,4 +1,3 @@
-<br>
 <div class="container">
     <div class="row justify-content-center">
         <div class="d-lg-flex half">
@@ -7,7 +6,7 @@
                 <div class="container">
                     <div class="row align-items-center justify-content-center">
                         <div class="col-md-8" style="position: relative; margin-left: 140px;">
-                            <h3 class="text-left font-weight-bold text headertxt" style="color: rgb(0, 51, 102);">
+                            <h1 class="text-left font-weight-bold text headertxt" style="color: rgb(0, 51, 102);">
                                 Student Expense 
                                 <span 
                                   style="cursor: pointer; color: rgb(0, 51, 102);" 
@@ -17,11 +16,11 @@
                                 >
                                   Tracker
                                 </span>
-                              </h3>
+                            </h1>
                             <br>
-                            <h4 class="text-left font-weight-bold mb-4 text" style="width: 400px; color: rgb(0, 51, 102);">
+                            <h2 class="text-left font-weight-bold mt-5 mb-4 text" style="width: 400px; color: rgb(0, 51, 102);">
                                 Register Now!
-                              </h4>                              
+                            </h2>    
                             <form [formGroup]="signUpForm">
                                 <div class="form-group first">
                                     <label for="firstName" style="font-weight: 400;">First Name</label>
@@ -60,10 +59,10 @@
                                     <label for="password" style="font-weight: 400;">Password</label>
                                     <input [type]="passwordType" formControlName="password" class="form-control"
                                         placeholder="Your Password" id="password">
-                                    <span *ngIf="passwordType == 'Text'" (click)="passwordType = 'Password'"
+                                    <!-- <span *ngIf="passwordType == 'Text'" (click)="passwordType = 'Password'"
                                         class="fa fa-eye showPassword cursor"></span>
                                     <span *ngIf="passwordType == 'Password'" (click)="passwordType = 'Text'"
-                                        class="fa fa-eye-slash showPassword cursor"></span>
+                                        class="fa fa-eye-slash showPassword cursor"></span> -->
                                     <div class="color-red"
                                         *ngIf="(formvalid) || (signUpForm.controls['password'].dirty)">
                                         <div *ngIf="signUpForm.controls['password'].hasError('required')">
@@ -80,8 +79,7 @@
                                     class="btn btn-block btn-primary textBg border-0" 
                                     style="background-color: rgb(0, 102, 204); border: none;" 
                                     (click)="register()" 
-                              />
-                              
+                                />
                             </form>
                         </div>
                     </div>

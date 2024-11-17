@@ -1,8 +1,8 @@
 <div class="container mt-4">
   <div class="header mb-0">
-    <h4 class="text-left expense-header" style="color: rgb(0, 51, 102);">Expense Reports</h4>
+    <h2 class="text-left expense-header" style="color: rgb(0, 51, 102);">Expense Reports</h2>
     <div class="button-container">
-      <button class="btn" routerLink="/addexpense" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><em class="fa fa-plus" ></em> Add Expense</button>
+      <button class="btn" routerLink="/addexpense" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><em class="fa fa-plus"></em> Add Expense</button>
       <button class="btn" routerLink="/visualize" style="color: rgb(0, 51, 102); padding: 4px; border-radius: 4px"><em class="fa fa-chart-bar"></em> Visualize</button>
     </div>
   </div>
@@ -38,13 +38,22 @@
     </tbody>
   </table>
 
-  <div class="pagination-controls mt-0" *ngIf="expenses.length > itemsPerPage">
-    <button (click)="previousPage()" [disabled]="currentPage === 1" style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">Previous</button>
+  <!-- Pagination Controls -->
+  <nav class="pagination-controls mt-0" aria-label="Pagination">
+    <button 
+      (click)="previousPage()" 
+      [disabled]="currentPage === 1" 
+      style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">
+      Previous
+    </button>
     <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button (click)="nextPage()" [disabled]="currentPage === totalPages" style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">
+    <button 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages" 
+      style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">
       Next
     </button>
-  </div>
+  </nav>
 
   <div class="mt-4 download-button-container" *ngIf="expenses.length > 0;">
     <button class="btn" (click)="downloadExpenses()" style="color: rgb(255, 255, 255); background-color: rgb(0, 102, 204); border: none; padding: 10px 20px; border-radius: 5px;">
@@ -67,7 +76,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+        <h3 class="modal-title" id="deleteModalLabel">Confirm Deletion</h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">

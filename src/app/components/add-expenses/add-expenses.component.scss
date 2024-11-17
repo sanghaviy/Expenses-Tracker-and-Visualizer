@@ -204,3 +204,16 @@ textarea::placeholder {
     color: #b3b3b3;
     font-weight: 300;
 }
+
+.currencylabel {
+    color: rgb(0, 51, 102);  
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

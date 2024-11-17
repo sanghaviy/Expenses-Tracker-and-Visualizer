@@ -78,7 +78,6 @@ export class VisualizeExpenseComponent implements OnInit {
   }
 
   convertExpensesToUSD(expenses: Expense[]) {
-    debugger
     expenses.forEach(expense => {
       if (this.conversionRates[expense.currency]) {
         const conversionRate = this.conversionRates[expense.currency];
