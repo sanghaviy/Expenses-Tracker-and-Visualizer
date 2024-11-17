@@ -14,7 +14,7 @@ export class LoginComponent {
   passwordType: string = 'password';
   loginForm: FormGroup = this.fb.group({
     username: ['', Validators.required],
-    password: ['', Validators.required],
+    password: ['', [Validators.required]] //, Validators.minLength(6)
   });
 
   constructor(

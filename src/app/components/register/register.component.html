@@ -47,7 +47,7 @@
                                 <div class="form-group first">
                                     <label for="username" style="font-weight: 400;">Email ID</label>
                                     <input type="text" class="form-control" formControlName="username"
-                                        placeholder="your-email@gmail.com" id="username">
+                                        placeholder="Enter your email address" id="username">
                                     <div class="color-red"
                                         *ngIf="(formvalid) || (signUpForm.controls['username'].dirty)">
                                         <div *ngIf="signUpForm.controls['username'].hasError('required')">
@@ -69,6 +69,12 @@
                                             *Required password
                                         </div>
                                     </div>
+                                    <!-- <div class="color-red"
+                                        *ngIf="(formvalid) || (signUpForm.controls['password'].dirty)">
+                                        <div *ngIf="signUpForm.controls['password'].hasError('minlength')">
+                                            *Password should contain 6 characters
+                                        </div>
+                                    </div> -->
                                 </div>
                                 <div class="d-flex mb-4 align-items-center mt-2 cursor">
                                     <span class="small text-primary cursor" routerLink="/login">Already Registered. Login?</span>
